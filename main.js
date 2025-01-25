@@ -342,13 +342,13 @@ class Fyta extends utils.Adapter {
 	cleanName(str){
 		// Ersetze die deutschen Umlaute
 		str = str.replace(/ä/g, "ae")
-				.replace(/ö/g, "oe")
-				.replace(/ü/g, "ue")
-				.replace(/Ä/g, "Ae")
-				.replace(/Ö/g, "Oe")
-				.replace(/Ü/g, "Ue")
-				.replace(/ß/g, "ss")
-				.replace(/[ ]*/g, "_");
+			.replace(/ö/g, "oe")
+			.replace(/ü/g, "ue")
+			.replace(/Ä/g, "Ae")
+			.replace(/Ö/g, "Oe")
+			.replace(/Ü/g, "Ue")
+			.replace(/ß/g, "ss")
+			.replace(/[ ]*/g, "_");
 
 		// Entferne alle Zeichen, die keine Buchstaben (A-Z, a-z) oder Zahlen (0-9) sind
 		str = str.replace(/[^A-Za-z0-9-]/g, "");
