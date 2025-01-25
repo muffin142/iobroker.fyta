@@ -5,43 +5,16 @@
 		"news": {
 			"0.0.1": {
 				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"uk": "Початкова версія",
-				"zh-cn": "首次出版"
+				"de": "Erstveröffentlichung"
 			}
 		},
 		"titleLang": {
 			"en": "FYTA",
-			"de": "Fyta",
-			"ru": "Фита",
-			"pt": "FYTA",
-			"nl": "FYTA",
-			"fr": "FYTA",
-			"it": "Per vostra informazione",
-			"es": "FYTA",
-			"pl": "Fyta",
-			"uk": "FYTA",
-			"zh-cn": "Fyta"
+			"de": "Fyta"			
 		},
 		"desc": {
-			"en": "fyta",
-			"de": "fyta",
-			"ru": "фита",
-			"pt": "fita",
-			"nl": "Fyta",
-			"fr": "fyta",
-			"it": "fyta",
-			"es": "fyta",
-			"pl": "Fyta",
-			"uk": "Фіта",
-			"zh-cn": "菲塔"
+			"en": "Adapter to connect ioBroker to FYTA plant sensors",
+			"de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden"
 		},
 		"authors": [
 			"muffin142 <github@marvside.de>"
@@ -76,16 +49,7 @@
 			"singleton": true,
 			"name": {
 				"en": "FYTA",
-				"de": "Fyta",
-				"ru": "Фита",
-				"pt": "FYTA",
-				"nl": "FYTA",
-				"fr": "FYTA",
-				"it": "Per vostra informazione",
-				"es": "FYTA",
-				"pl": "Fyta",
-				"uk": "FYTA",
-				"zh-cn": "Fyta"
+				"de": "FYTA",
 			},
 			"link": "",
 			"fa-icon": "info"
