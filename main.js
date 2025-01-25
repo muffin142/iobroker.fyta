@@ -39,19 +39,19 @@ class Fyta extends utils.Adapter {
 
 		this.log.debug("direct call");
 		this.loadData();
-		return;
+		//return;
 
-		this.loadDataInterval = () => {
-			this.log.debug("in anon func");
-			this.loadData();
-
-			/*
-			let interval = 5 * 1000;
-			return(setInterval(() => {
-				this.loadData();
-			}, interval));
-			*/
-		}
+		//this.loadDataInterval = () => {
+		//	this.log.debug("in anon func");
+		//	this.loadData();
+		//
+		//	/*
+		//	let interval = 5 * 1000;
+		//	return(setInterval(() => {
+		//		this.loadData();
+		//	}, interval));
+		//	*/
+		//}
 
 		/*
 
@@ -171,7 +171,7 @@ class Fyta extends utils.Adapter {
 		}
 
 		return null;
-	};
+	}
 
 	/**
 	 * Loads data from FYTA cloud
@@ -203,7 +203,7 @@ class Fyta extends utils.Adapter {
 
 					// Create garden states
 					this.log.debug("Create states...");
-					let statesDefintion = {
+					const statesDefintion = {
 						"id": 			{name: "ID", 			type: "number" 		},
 						"garden_name": 	{name: "garden_name", 	type: "string" 		},
 						"origin_path": 	{name: "origin_path", 	type: "string" 		},
@@ -211,9 +211,9 @@ class Fyta extends utils.Adapter {
 						"mac_address": 	{name: "mac_address", 	type: "string" 		},
 						"is_shared":	{name: "is_shared",		type: "boolean",	defaultValue: false}
 					};
-					for (let [stateSourceObject, stateDefinition] of Object.entries(statesDefintion)) {
+					for (const [stateSourceObject, stateDefinition] of Object.entries(statesDefintion)) {
 
-						let stateID = gardenObjectID + "." + stateDefinition.name;
+						const stateID = gardenObjectID + "." + stateDefinition.name;
 						let stateValue = null;
 						if(stateSourceObject in garden){
 							stateValue = garden[stateSourceObject];
@@ -251,11 +251,11 @@ class Fyta extends utils.Adapter {
 					this.log.debug("Handling plant " + plant.nickname);
 
 					// Create plant object
-					let plantObjectID = ""
-					if(true){
+					let plantObjectID = "";
+					if(plantObjectID==""){
 						// Place plant-object in garden
 						if(plant.garden && plant.garden.id){
-							let garden = data.gardens.find(g => g.id === plant.garden.id);
+							const garden = data.gardens.find(g => g.id === plant.garden.id);
 							if(garden === null){
 								this.log.error("Can't find defined garden for plant " + plant.nickname + " (ID " + plant.id + ")");
 								return;
@@ -277,7 +277,7 @@ class Fyta extends utils.Adapter {
 
 					// Create plant states
 					this.log.debug("Create states...");
-					let statesDefintion = {
+					const statesDefintion = {
 						"id": 					{name: "ID", 					type: "number" 		},
 						"nickname": 			{name: "nickname", 				type: "string" 		},
 						"scientific_name": 		{name: "scientific_name", 		type: "string" 		},
@@ -299,9 +299,9 @@ class Fyta extends utils.Adapter {
 						"isSilent": 			{name: "isSilent", 				type: "boolean"		},
 						"isDoingGreat": 		{name: "isDoingGreat", 			type: "boolean"		}
 					};
-					for (let [stateSourceObject, stateDefinition] of Object.entries(statesDefintion)) {
+					for (const [stateSourceObject, stateDefinition] of Object.entries(statesDefintion)) {
 
-						let stateID = plantObjectID + "." + stateDefinition.name;
+						const stateID = plantObjectID + "." + stateDefinition.name;
 						let stateValue = null;
 						if(stateSourceObject in plant){
 							stateValue = plant[stateSourceObject];
@@ -342,16 +342,16 @@ class Fyta extends utils.Adapter {
 	cleanName(str){
 		// Ersetze die deutschen Umlaute
 		str = str.replace(/ä/g, "ae")
-			   .replace(/ö/g, "oe")
-			   .replace(/ü/g, "ue")
-			   .replace(/Ä/g, "Ae")
-			   .replace(/Ö/g, "Oe")
-			   .replace(/Ü/g, "Ue")
-			   .replace(/ß/g, "ss")
-			   .replace(/[ ]*/g, "_");
+				.replace(/ö/g, "oe")
+				.replace(/ü/g, "ue")
+				.replace(/Ä/g, "Ae")
+				.replace(/Ö/g, "Oe")
+				.replace(/Ü/g, "Ue")
+				.replace(/ß/g, "ss")
+				.replace(/[ ]*/g, "_");
 
 		// Entferne alle Zeichen, die keine Buchstaben (A-Z, a-z) oder Zahlen (0-9) sind
-		str = str.replace(/[^A-Za-z0-9\-]/g, "");
+		str = str.replace(/[^A-Za-z0-9-]/g, "");
 
 		return str;
 	}
