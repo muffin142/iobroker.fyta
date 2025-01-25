@@ -257,7 +257,7 @@ class Fyta extends utils.Adapter {
 						if(plant.garden && plant.garden.id){
 							let garden = data.gardens.find(g => g.id === plant.garden.id);
 							if(garden === null){
-								this.log.error("Can"t find defined garden for plant " + plant.nickname + " (ID " + plant.id + ")");
+								this.log.error("Can't find defined garden for plant " + plant.nickname + " (ID " + plant.id + ")");
 								return;
 							}
 							this.log.debug("Belongs to garden " + JSON.stringify(garden));
