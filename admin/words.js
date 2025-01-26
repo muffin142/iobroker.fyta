@@ -13,7 +13,7 @@ systemDictionary = {
 		"de": "eMail-Adresse"
 	},
 	"Password": {
-		"en": "Password EN",
-		"de": "Passwort DE"
+		"en": "Password EN-words",
+		"de": "Passwort DE-words"
 	}
 };

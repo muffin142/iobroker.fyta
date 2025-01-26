@@ -59,7 +59,8 @@
 	"native": {
 		"email": "",
 		"password": "",
-		"dataLayout": "nested"
+		"dataLayout": "nested",
+		"clearOnStartup": false
 	},
 	"objects": [],
 	"instanceObjects": [

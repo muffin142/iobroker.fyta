@@ -13,6 +13,8 @@ declare global {
 			// Do not enter anything here!
 			email: string;
 			password: string;
+			dataLayout: string;
+			clearOnStartup: boolean;
 		}
 	}
 }
