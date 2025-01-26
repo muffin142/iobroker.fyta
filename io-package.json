@@ -58,7 +58,8 @@
 	},
 	"native": {
 		"email": "",
-		"password": ""
+		"password": "",
+		"dataLayout": "nested"
 	},
 	"objects": [],
 	"instanceObjects": [

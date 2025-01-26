@@ -1,5 +1,14 @@
 {
-	"i18n": true,
+	"i18n": {
+		"eMail": {
+		  "en": "eMail-Address EN1",
+		  "de": "eMail-Adresse DE1"
+		},
+		"Password": {
+		  "en": "Password EN1",
+		  "de": "Passwort DE1"
+		},
+	},
 	"type": "panel",
 	"items": {
 		"email": {
@@ -11,6 +20,22 @@
 			"type": "password",
 			"label": "Password",
 			"newLine": true
-		}
+		},
+		"dataLayout": {
+			"newLine": true,
+			"type": "select",
+			"label": "Order of gardens plants",
+			"options": [
+				{
+					"label": "Nested plants in gardens",
+					"value": "nested"
+				},
+				{
+					"label": "Flat sturcture",
+					"value": "flat"
+				}
+				}
+			]
+		},
 	}
 }
