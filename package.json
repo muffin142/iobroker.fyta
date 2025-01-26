@@ -1,7 +1,7 @@
 {
   "name": "iobroker.fyta",
   "version": "0.0.1",
-  "description": "fyta",
+  "description": "fyta11",
   "author": {
     "name": "muffin142",
     "email": "github@marvside.de"
@@ -22,8 +22,8 @@
     "node": ">= 20"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.2.3",
-    "axios": ">=1.7.9"
+    "@iobroker/adpter-core": "^3.2.3",
+    "axios": "^1.7.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",

@@ -32,8 +32,8 @@
 		"platform": "Javascript/Node.js",
 		"icon": "fyta.png",
 		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/muffin142/ioBroker.fyta/main/admin/fyta.png",
-		"readme": "https://github.com/muffin142/ioBroker.fyta/blob/main/README.md",
+		"extIcon": "https://raw.githubusercontent.com/muffin142/iobroker.fyta/main/admin/fyta.png",
+		"readme": "https://github.com/muffin142/iobroker.fyta/blob/main/README.md",
 		"loglevel": "info",
 		"tier": 3,
 		"mode": "daemon",
@@ -42,23 +42,12 @@
 		"connectionType": "cloud",
 		"dataSource": "poll",
 		"adminUI": {
-			"config": "json",
-			"tab": "materialize"
-		},
-		"adminTab": {
-			"singleton": true,
-			"name": {
-				"en": "FYTA",
-				"de": "FYTA"
-			},
-			"link": "",
-			"fa-icon": "info"
-		},
+			"config": "json"
+		},		
 		"supportCustoms": true,
 		"dependencies": [
 			{
-				"js-controller": ">=6.0.11",
-				"axios": ">=1.7.9"
+				"js-controller": ">=6.0.11"
 			}
 		],
 		"globalDependencies": [

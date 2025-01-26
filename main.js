@@ -31,13 +31,16 @@ class Fyta extends utils.Adapter {
 	 */
 	async onReady() {
 		// Initialize your adapter here
+		
+		if(this.config.email == "" || this.config.password == ""){
+			this.log.error("e-Mail and/or password not provided. Please check config and restart.");
+			this.exitAdapter();
+			return;
+		}
 
 		this.log.info("Loading gardens and plants for " + this.config.email);
-		//this.log.info("PW" + this.config.password);
-		//return;
 
-
-		this.log.debug("direct call");
+		this.log.debug("first call");
 		this.loadData();
 		//return;
 
@@ -117,23 +120,21 @@ class Fyta extends utils.Adapter {
 
 				if (!response.data || !response.data.access_token) {
 					this.log.error("Response does not contain access_token");
+					this.exitAdapter();
+					return;
 				}
 
+				this.setState("info.connection", true, true);
 				this.log.debug("Got access_token, returning");
 				return response.data.access_token;
 			}
 
 		} catch(error){
 			// handle error
-			this.log.error("An error occured while logging into FYTA API. Please check your data and restart adapter.");
+			this.log.error("An error occured while logging into FYTA API. Please check config and restart.");
 			this.log.debug(error);
 
-			// Terminate Adapter
-			if (typeof this.terminate === "function") {
-				this.terminate(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
-			} else {
-				process.exit(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
-			}
+			this.exitAdapter();
 		}
 
 		return null;
@@ -322,11 +323,16 @@ class Fyta extends utils.Adapter {
 								write: false,
 							},
 							native: {},
-						});
-						// Set state
-						this.setState(stateID, {
-							val: stateValue,
-							ack: true
+						}, (err) => {
+							if (!err) {
+								// Set state
+								this.setState(stateID, {
+									val: stateValue,
+									ack: true,
+								});
+							} else {
+								this.log.error("Error creating state " + stateID + ": " + err);
+							}
 						});
 
 					}
@@ -370,6 +376,15 @@ class Fyta extends utils.Adapter {
 			return this.getNestedValue(obj[key], keys); // Rekursiver Aufruf mit dem restlichen Schlüssel
 		}
 		return undefined; // Wenn der Wert nicht gefunden wird
+	}
+	
+	exitAdapter(){
+		// Terminate Adapter
+		if (typeof this.terminate === "function") {
+			this.terminate(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
+		} else {
+			process.exit(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
+		}
 	}
 
 
