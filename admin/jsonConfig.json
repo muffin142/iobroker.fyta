@@ -4,7 +4,7 @@
 	"items": {
 		"email": {
 			"type": "text",
-			"label": "e-Mail-Address",
+			"label": "eMail",
 			"newLine": true
 		},
 		"password": {

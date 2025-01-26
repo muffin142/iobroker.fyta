@@ -33,28 +33,36 @@ class Fyta extends utils.Adapter {
 		// Initialize your adapter here
 		
 		if(this.config.email == "" || this.config.password == ""){
-			this.log.error("e-Mail and/or password not provided. Please check config and restart.");
-			this.exitAdapter();
-			return;
+			this.log.error("eMail and/or password not provided. Please check config and restart.");
+			return;			
 		}
 
 		this.log.info("Loading gardens and plants for " + this.config.email);
 
-		this.log.debug("first call");
-		this.loadData();
-		//return;
-
-		//this.loadDataInterval = () => {
-		//	this.log.debug("in anon func");
-		//	this.loadData();
-		//
-		//	/*
-		//	let interval = 5 * 1000;
-		//	return(setInterval(() => {
-		//		this.loadData();
-		//	}, interval));
-		//	*/
-		//}
+		// Staring interval if initial lod is successfull
+		this.loadDataInterval = (() => {
+			
+			// Initial load
+			this.log.debug("Start initial load");
+			let result = this.loadData();
+		
+			
+			if(result){
+				this.log.debug("Initial load sucessfull, starting interval");
+				let interval = 30 * 60 * 1000;
+				return(setInterval(() => {
+					let result = this.loadData();
+					if(!result || result == null){
+						clearInterval(this.loadDataInterval);
+						this.log.info("Stopped interval because of previous errors.");
+					}
+				}, interval));
+			}else{
+				this.log.info("Stopped interval because of previous errors.");
+			}
+			
+			return null;
+		})();
 
 		/*
 
@@ -89,7 +97,8 @@ class Fyta extends utils.Adapter {
 			// ...
 			// clearInterval(interval1);
 
-			clearInterval(this.loadDataInterval);
+			if(this.loadDataInterval !== null)
+				clearInterval(this.loadDataInterval);
 
 			callback();
 		} catch (e) {
@@ -126,17 +135,21 @@ class Fyta extends utils.Adapter {
 
 				this.setState("info.connection", true, true);
 				this.log.debug("Got access_token, returning");
+				
 				return response.data.access_token;
+				
+			}else{
+				this.log.error("Login was not successfull (HTTP-Status " + response.status + ")");
 			}
 
 		} catch(error){
 			// handle error
 			this.log.error("An error occured while logging into FYTA API. Please check config and restart.");
 			this.log.debug(error);
-
-			this.exitAdapter();
 		}
 
+		this.setState("info.connection", false, true);
+		
 		return null;
 	}
 
@@ -163,6 +176,8 @@ class Fyta extends utils.Adapter {
 				}
 
 				return response.data;
+			}else{
+				this.log.error("Retrieving gardens and plants was not successfull (HTTP-Status " + response.status + ")");
 			}
 
 		} catch(error){
@@ -339,10 +354,11 @@ class Fyta extends utils.Adapter {
 
 				});
 
-
-			}
-
+				return true;
+			}		
+			return true;
 		}
+		return false;
 	}
 
 	cleanName(str){
