@@ -118,6 +118,8 @@ class Fyta extends utils.Adapter {
 
 	/**
 	 * Logs into FYTA-API
+	 * @param {string} email
+	 * @param {string} password
 	 */
 	async fytaLogin(email, password){
 		this.log.debug("Start fytaLogin()");
@@ -165,6 +167,7 @@ class Fyta extends utils.Adapter {
 
 	/**
 	 * Loads gardens and plants from FYTA API
+	 * @param {string} token
 	 */
 	async fytaGetData(token){
 		this.log.debug("Start fytaGetData()");
@@ -308,7 +311,10 @@ class Fyta extends utils.Adapter {
 						this.setObjectNotExists(virtualGardenNameCleaned, {
 							type: "device",
 							common: {
-								name: "Virtual garden for plants not belonging to any garden",
+								name: {
+									"en": "Virtual garden for plants not belonging to any garden",
+									"de": "Virtueller Garten für Pflanzen, die zu keinem Garten gehören"
+								},
 								icon: "/icons/garden.png"
 							},
 							native: {},
@@ -328,70 +334,67 @@ class Fyta extends utils.Adapter {
 
 					// Create plant states
 					this.log.debug("Create states...");
-					const statesDefintion = {
-						"id": 					{name: "ID", 					type: "number" 		},
-						"nickname": 			{name: "nickname", 				type: "string" 		},
-						"scientific_name": 		{name: "scientific_name", 		type: "string" 		},
-						"common_name": 			{name: "common_name", 			type: "string" 		},
-						"status": 				{name: "status", 				type: "number"		},
-						"thumb_path": 			{name: "thumb_path", 			type: "string" 		},
-						"origin_path": 			{name: "origin_path", 			type: "string" 		},
-						"plant_thumb_path": 	{name: "plant_thumb_path", 		type: "string" 		},
-						"plant_origin_path": 	{name: "plant_origin_path", 	type: "string" 		},
-						"is_shared":			{name: "is_shared",				type: "boolean",	defaultValue: false},
+					const plantStatesDefintion = {
+						"id": 					{name: "ID", 					type: "number" 					},
+						"nickname": 			{name: "nickname", 				type: "string",		dev: ""		},
+						"scientific_name": 		{name: "scientific_name", 		type: "string",		dev: ""		},
+						"common_name": 			{name: "common_name", 			type: "string",		dev: ""		},
+						"status": 				{name: "status", 				type: "number",		dev: 3,		states: {"0":"User Plant deleted","1":"User Plant good status","2":"User Plant bad status","3":"User Plant no sensor"}},
+						"wifi_status":			{name: "wifi_status",			type: "number",		dev: -1,	states: {"-1": "Never connected to any hub or user doesnt have any hub or plant doesnt have sensor", "0":"Lost connection to all previously connected hubs", "1":"Is connected to at least one hub", "2":"Error in connecting hub OR hub connection lost within a specific time range"}},
+						"thumb_path": 			{name: "thumb_path", 			type: "string",		dev: ""		},
+						"origin_path": 			{name: "origin_path", 			type: "string",		dev: ""		},
+						"plant_thumb_path": 	{name: "plant_thumb_path", 		type: "string",		dev: ""		},
+						"plant_origin_path": 	{name: "plant_origin_path", 	type: "string",		def: ""		},
+						"is_shared":			{name: "is_shared",				type: "boolean",	def: false	},
 
-						"temperature_status": 	{name: "temperature_status",	type: "number"		},
-						"light_status": 		{name: "light_status", 			type: "number"		},
-						"moisture_status": 		{name: "moisture_status", 		type: "number"		},
-						"salinity_status": 		{name: "salinity_status", 		type: "number"		},
-						"nutrients_status": 	{name: "nutrients_status", 		type: "number"		},
+						"temperature_status": 	{name: "temperature_status",	type: "number",		def: 0,		states: {"0":"No Data", "1":"Too Low", "2":"Low", "3":"Perfect", "4":"High", "5":"Too High"}},
+						"light_status": 		{name: "light_status", 			type: "number",		def: 0,		states: {"0":"No Data", "1":"Too Low", "2":"Low", "3":"Perfect", "4":"High", "5":"Too High"}},
+						"moisture_status": 		{name: "moisture_status", 		type: "number",		def: 0,		states: {"0":"No Data", "1":"Too Low", "2":"Low", "3":"Perfect", "4":"High", "5":"Too High"}},
+						"salinity_status": 		{name: "salinity_status", 		type: "number",		def: 0,		states: {"0":"No Data", "1":"Too Low", "2":"Low", "3":"Perfect", "4":"High", "5":"Too High"}},
+						"nutrients_status": 	{name: "nutrients_status", 		type: "number",		def: 0,		states: {"0":"No Data", "1":"Too Low", "2":"Low", "3":"Perfect", "4":"High", "5":"Too High"}},
 
+						"has_remote_hub":		{name: "has_remote_hub",		type: "boolean",	def: false	},
+						"has_remote_sensor":	{name: "has_remote_sensor",		type: "boolean",	def: false	},
 
-						"isSilent": 			{name: "isSilent", 				type: "boolean"		},
-						"isDoingGreat": 		{name: "isDoingGreat", 			type: "boolean"		}
+						"isSilent": 			{name: "isSilent", 				type: "boolean",	def: false	},
+						"isDoingGreat": 		{name: "isDoingGreat", 			type: "boolean",	def: false	}
 					};
-					for (const [stateSourceObject, stateDefinition] of Object.entries(statesDefintion)) {
+					for (const [stateSourceObject, stateDefinition] of Object.entries(plantStatesDefintion)) {
 
 						const stateID = plantObjectID + "." + stateDefinition.name;
 						let stateValue = null;
 						if(stateSourceObject in plant){
 							stateValue = plant[stateSourceObject];
-						}else if("defaultValue" in stateDefinition){
-							stateValue = stateDefinition.defaultValue;
+						}
+						if(stateValue === null && "def" in stateDefinition){
+							stateValue = stateDefinition.def;
 						}
 
 						this.log.debug("Set State " + stateID + " to " + stateValue + " (type " + stateDefinition.type + ")");
 
 						// Create state object
-						this.setObjectNotExists(stateID, {
-							type: "state",
+						this.setStateOrCreate(stateID, stateValue, {
 							common: {
-								name: stateDefinition.name,
-								type: stateDefinition.type,
-								role: "value",
-								read: true,
-								write: false,
+								...{
+									role: "value",
+									read: true,
+									write: false
+								},
+								...stateDefinition
 							},
-							native: {},
-						}, (err) => {
-							if (!err) {
-								// Set state
-								this.setState(stateID, {
-									val: stateValue,
-									ack: true
-								});
-							} else {
-								this.log.error("Error creating state " + stateID + ": " + err);
+							state: {
+								read: true,
+								write: false
 							}
-						});						
+						});				
 					}
 					
 					// Download Images if present
 					["thumb_path", "origin_path"].forEach(async (property )=> {
 						if(plant[property] !== ""){							
-														
+
 							const filename = path.join("plant", plant["id"] + "_" + (property.split("_")[0]) + ".jpg");
-							
+
 							const fileExists = await this.fileExistsAsync(this.name, filename);
 							if(fileExists){
 								this.log.debug("Skipped downloading file /" + this.name + "/" +  filename);
@@ -410,40 +413,115 @@ class Fyta extends utils.Adapter {
 								})
 								.catch((error) => {
 									this.log.error(error.message);
-								});
-							
-							
-							/*
-							const fullFilePath = path.join(this.filesBasePath, filename);
-							
-							// Check for file presence
-							fs.access(fullFilePath, fs.constants.F_OK, (err) => {
-								if(err){
-									this.downloadImage(plant[property], filename, token)
-										.then((fileName) => {	
-											this.setStateOrCreate(plantObjectID + "." + property + "_local", fileName, {
-												common: {
-													name: property,
-													type: "string",
-													read: true,
-													write: false
-												}
-											});
-										})
-										.catch((error) => {
-											this.log.error(error.message);
-										});
-								}else{
-									this.log.debug("Skipped downloading file " + filename);
-								}
-							});
-							*/
-							
-							
+								});								
 						}
 					});
+					
+					// Looking for sensor
+					if(plant.sensor !== null){
+						const sensorObjectID = plantObjectID + ".sensor"
+						this.log.debug("Create sensor-object if not exists");
+						this.setObjectNotExists(sensorObjectID, {
+							type: "device",
+							common: {
+								name: "Sensor",
+								icon: "/icons/sensor.png"
+							},
+							native: {},
+						});
+						
+						const sensorStatesDefinition = {
+							"id": 					{name: "ID", 					type: "string" 					},
+							"status": 				{name: "status", 				type: "number",		dev: 0,		states: {"0":"none","1":"correct","2":"error"} },
+							"version": 				{name: "version", 				type: "string",		dev: ""		},
+							"is_battery_low": 		{name: "is_battery_low", 		type: "boolean",	dev: false	},
+							"received_data_at": 	{name: "received_data_at", 		type: "string",		dev: ""		},
+						};
+						for (const [stateSourceObject, stateDefinition] of Object.entries(sensorStatesDefinition)) {
+
+							const stateID = sensorObjectID + "." + stateDefinition.name;
+							let stateValue = null;
+							if(stateSourceObject in plant.sensor ){
+								stateValue = plant.sensor[stateSourceObject];
+							}
+							if(stateValue === null && "def" in stateDefinition){
+								stateValue = stateDefinition.def;
+							}
+
+							this.log.debug("Set State " + stateID + " to " + stateValue + " (type " + stateDefinition.type + ")");
+
+							// Create state object
+							this.setStateOrCreate(stateID, stateValue, {
+								common: {
+									...{
+										role: "value",
+										read: true,
+										write: false
+									},
+									...stateDefinition
+								},
+								state: {
+									read: true,
+									write: false
+								}
+							});				
+						}						
+					}
+					
+					// Looking for hub
+					if(plant.hub !== null){
+						const hubObjectID = plantObjectID + ".hub"
+						this.log.debug("Create hub-object if not exists");
+						this.setObjectNotExists(hubObjectID, {
+							type: "device",
+							common: {
+								name: "Hub",
+								icon: "/icons/hub.png"
+							},
+							native: {},
+						});
+						
+						const hubStatesDefinition = {
+							"id": 					{name: "ID", 					type: "number" 					},
+							"hub_id": 				{name: "hub_id", 				type: "string",		dev: ""		},
+							"hub_name": 			{name: "hub_id", 				type: "string",		dev: ""		},
+							"version": 				{name: "version", 				type: "string",		dev: ""		},							
+							"status": 				{name: "status", 				type: "number",		dev: 0,		states: {"0":"none","1":"correct","2":"error"} },
+							"received_data_at": 	{name: "received_data_at", 		type: "string",		dev: ""		},
+							"reached_hub_at": 		{name: "reached_hub_at", 		type: "string",		dev: ""		},
+						};
+						for (const [stateSourceObject, stateDefinition] of Object.entries(hubStatesDefinition)) {
+
+							const stateID = hubObjectID + "." + stateDefinition.name;
+							let stateValue = null;
+							if(stateSourceObject in plant.hub ){
+								stateValue = plant.hub[stateSourceObject];
+							}
+							if(stateValue === null && "def" in stateDefinition){
+								stateValue = stateDefinition.def;
+							}
+
+							this.log.debug("Set State " + stateID + " to " + stateValue + " (type " + stateDefinition.type + ")");
+
+							// Create state object
+							this.setStateOrCreate(stateID, stateValue, {
+								common: {
+									...{
+										role: "value",
+										read: true,
+										write: false
+									},
+									...stateDefinition
+								},
+								state: {
+									read: true,
+									write: false
+								}
+							});				
+						}				
+					}
 				});
-				
+
 				this.setState("info.last_update", (new Date()).toLocaleString(), true);
 
 				return true;
@@ -455,25 +533,27 @@ class Fyta extends utils.Adapter {
 
 	/**
 	 * Removes unwantes characters from a string to use it as a state or object id
+	 * @param {string} string
 	 */
-	cleanName(str){
+	cleanName(string){
 		// Ersetze die deutschen Umlaute
-		str = str.replace(/ä/g, "ae")
+		string = string.replace(/ä/g, "ae")
 			.replace(/ö/g, "oe")
 			.replace(/ü/g, "ue")
 			.replace(/Ä/g, "Ae")
 			.replace(/Ö/g, "Oe")
 			.replace(/Ü/g, "Ue")
 			.replace(/ß/g, "ss")
-			.replace(/[ ]*/g, "_");
+			.replace(/[ ]{1,}/g, "_");
 
 		// Entferne alle Zeichen, die keine Buchstaben (A-Z, a-z) oder Zahlen (0-9) sind
-		str = str.replace(/[^A-Za-z0-9-]/g, "");
+		string = string.replace(/[^A-Za-z0-9-_]/g, "");
 
-		return str;
+		return string;
 	}
 
 	// Rekursive Funktion, um in verschachtelten Objekten nach einem Wert zu suchen
+	/*
 	getNestedValue(obj, keys) {
 		// Wenn keys ein String ist, teile ihn in ein Array
 		if (typeof keys === "string") {
@@ -488,6 +568,7 @@ class Fyta extends utils.Adapter {
 		}
 		return undefined; // Wenn der Wert nicht gefunden wird
 	}
+	*/
 	
 	/**
 	 * Stops execiution of adapter. Depending on instance settings it may restart.
@@ -503,6 +584,8 @@ class Fyta extends utils.Adapter {
 	
 	/**
 	 * Changes a option for current instance
+	 * @param {string} option
+	 * @param {string | boolean | number | null} value
 	 */
 	changeOption(option, value) {
 
@@ -531,6 +614,8 @@ class Fyta extends utils.Adapter {
 
 	/**
 	 * Sets and optionally creates a state if it doies not exists
+	 * @param {string} stateID
+	 * @param {string | boolean | number | null} stateValue
 	 */
 	setStateOrCreate(stateID, stateValue, options){
 		
@@ -541,8 +626,8 @@ class Fyta extends utils.Adapter {
 		
 		const common = {
 			...{
-				name: "defaultname",
-				type: "string",
+				//name: "defaultname",
+				//type: "string",
 				role: "value",
 				read: true,
 				write: false,
@@ -569,6 +654,9 @@ class Fyta extends utils.Adapter {
 
 	/**
 	 * Downloads a custm plant image
+	 * @param {string} url
+	 * @param {string} filename
+	 * @param {string} token
 	 */
 	async downloadImage(url, filename, token) {		
 		
