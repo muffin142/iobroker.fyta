@@ -8,6 +8,8 @@
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
 const axios = require("axios");
+const path = require('path');
+const fs = require('fs');
 
 class Fyta extends utils.Adapter {
 
@@ -24,18 +26,45 @@ class Fyta extends utils.Adapter {
 		// this.on("objectChange", this.onObjectChange.bind(this));
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
+		
+		this.filesBasePath =  path.join(__dirname, "../../iobroker-data/files");
 	}
 
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		// Initialize your adapter here
+
+		// Clear all Data?
+		if(this.config.clearOnStartup){
+			this.log.info("Delete all states as defined by config")
+			try {
+				// Holen aller Objekte im Namespace des Adapters
+				const objects = await this.getAdapterObjectsAsync();
+
+				// Löschen aller Datenpunkte
+				for (const key of Object.keys(objects)) {
+					if(key.indexOf("0.info") > -1){
+						this.log.debug("Skip state: " + key);
+						continue;
+					}					
+					//await this.delObjectAsync(key);
+					this.log.debug("Deleted state: " + key);
+				}
+
+				this.log.info("All states deleted successfully");
+			} catch (err) {
+				this.log.error("Error deleting states: " + err.message);
+			}
+			//this.config.clearOnStartup = false;
+			this.changeOption("clearOnStartup", false);
+		}		
 		
+		// eMail and password set?
 		if(this.config.email == "" || this.config.password == ""){
 			this.log.error("eMail and/or password not provided. Please check config and restart.");
 			return;			
-		}
+		}		
 
 		this.log.info("Loading gardens and plants for " + this.config.email);
 
@@ -62,26 +91,7 @@ class Fyta extends utils.Adapter {
 			}
 			
 			return null;
-		})();
-
-		/*
-
-		try {
-            // Holen aller Objekte im Namespace des Adapters
-            const objects = await this.getAdapterObjectsAsync();
-            const keys = Object.keys(objects);
-
-            // Löschen aller Datenpunkte
-            for (const key of keys) {
-                this.log.info(`Lösche Datenpunkt: ${key}`);
-                await this.delObjectAsync(key);
-            }
-
-            this.log.info("Alle Datenpunkte erfolgreich gelöscht.");
-        } catch (err) {
-            this.log.error(`Fehler beim Löschen der Datenpunkte: ${err.message}`);
-        }
-		*/
+		})();		
 
 	}
 
@@ -164,7 +174,7 @@ class Fyta extends utils.Adapter {
 			const response = await axios.get("https://web.fyta.de/api/user-plant", {
 				headers: {
 					"Authorization": "Bearer " + token,
-				},
+				}
 			});
 
 			// Check for successfull response
@@ -201,6 +211,7 @@ class Fyta extends utils.Adapter {
 
 			if(data !== null){
 				this.log.info("Retrieved " + data.gardens.length + " gardens and " + data.plants.length + " plants");
+				const virtualGardenNameCleaned = this.cleanName(this.config.virtualGardenName);
 
 				// Looping gardens
 				for (const garden of data.gardens) {
@@ -268,8 +279,13 @@ class Fyta extends utils.Adapter {
 
 					// Create plant object
 					let plantObjectID = "";
-					if(plantObjectID==""){
+					//if(this.options.dataLayout == "nested"){
 						// Place plant-object in garden
+						
+						// Defaulting to virtual garden
+						plantObjectID =  virtualGardenNameCleaned + "." + this.cleanName(plant.nickname);
+						
+						// Lookup for garden
 						if(plant.garden && plant.garden.id){
 							const garden = data.gardens.find(g => g.id === plant.garden.id);
 							if(garden === null){
@@ -279,6 +295,22 @@ class Fyta extends utils.Adapter {
 							this.log.debug("Belongs to garden " + JSON.stringify(garden));
 							plantObjectID = this.cleanName(garden.garden_name) + "." + this.cleanName(plant.nickname);
 						}
+					//}else if(this.options.dataLayout == "flat"){
+					//	plantObjectID = this.cleanName(plant.nickname);
+					//}else{
+					//	this.log.error("Unknown value for option \"dataLayout\": " + JSON.stringify(this.options.dataLayout));
+					//	return;
+					//}
+					
+					// Need to create virtual garden?
+					if(plantObjectID.indexOf(virtualGardenNameCleaned + ".") > -1){
+						this.setObjectNotExists(virtualGardenNameCleaned, {
+							type: "device",
+							common: {
+								name: "Virtual garden for plants not belonging to any garden",
+							},
+							native: {},
+						});
 					}
 
 					// Create plant object
@@ -343,16 +375,73 @@ class Fyta extends utils.Adapter {
 								// Set state
 								this.setState(stateID, {
 									val: stateValue,
-									ack: true,
+									ack: true
 								});
 							} else {
 								this.log.error("Error creating state " + stateID + ": " + err);
 							}
-						});
-
+						});						
 					}
-
+					
+					// Download Images if present
+					["thumb_path", "origin_path"].forEach(async (property )=> {
+						if(plant[property] !== ""){							
+														
+							const filename = path.join("plant", plant["id"] + "_" + (property.split("_")[0]) + ".jpg");
+							
+							const fileExists = await this.fileExistsAsync(this.name, filename);
+							if(fileExists){
+								this.log.debug("Skipped downloading file /" + this.name + "/" +  filename);
+								return;
+							}
+							this.downloadImage(plant[property], filename, token)
+								.then((filename) => {	
+									this.setStateOrCreate(plantObjectID + "." + property + "_local", filename, {
+										common: {
+											name: property,
+											type: "string",
+											read: true,
+											write: false
+										}
+									});
+								})
+								.catch((error) => {
+									this.log.error(error.message);
+								});
+							
+							
+							/*
+							const fullFilePath = path.join(this.filesBasePath, filename);
+							
+							// Check for file presence
+							fs.access(fullFilePath, fs.constants.F_OK, (err) => {
+								if(err){
+									this.downloadImage(plant[property], filename, token)
+										.then((fileName) => {	
+											this.setStateOrCreate(plantObjectID + "." + property + "_local", fileName, {
+												common: {
+													name: property,
+													type: "string",
+													read: true,
+													write: false
+												}
+											});
+										})
+										.catch((error) => {
+											this.log.error(error.message);
+										});
+								}else{
+									this.log.debug("Skipped downloading file " + filename);
+								}
+							});
+							*/
+							
+							
+						}
+					});
 				});
+				
+				this.setState("info.last_update", (new Date()).toLocaleString(), true);
 
 				return true;
 			}		
@@ -361,6 +450,9 @@ class Fyta extends utils.Adapter {
 		return false;
 	}
 
+	/**
+	 * Removes unwantes characters from a string to use it as a state or object id
+	 */
 	cleanName(str){
 		// Ersetze die deutschen Umlaute
 		str = str.replace(/ä/g, "ae")
@@ -394,6 +486,9 @@ class Fyta extends utils.Adapter {
 		return undefined; // Wenn der Wert nicht gefunden wird
 	}
 	
+	/**
+	 * Stops execiution of adapter. Depending on instance settings it may restart.
+	 */
 	exitAdapter(){
 		// Terminate Adapter
 		if (typeof this.terminate === "function") {
@@ -402,7 +497,140 @@ class Fyta extends utils.Adapter {
 			process.exit(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
 		}
 	}
+	
+	/**
+	 * Changes a option for current instance
+	 */
+	changeOption(option, value) {
 
+		const objectId = "system.adapter." + this.name + "." + this.instance;
+
+		// Get instances object
+		this.getForeignObject(objectId, (err, obj) => {
+			if (err || !obj) {
+				adapter.log.error("Error getting settings-object: " + (err || 'Object not found'));
+				return;
+			}
+
+			// Change option
+			obj.native[option] = value;
+
+			// Speichere die Änderungen
+			this.extendForeignObject(objectId, obj, (err) => {
+				if (err) {
+					this.log.error("Error saving instances settings: " + err);
+				} else {
+					this.log.debug("Changes setting \"" + option + "\" to " + JSON.stringify(value));
+				}
+			});
+		});
+	}
+
+	/**
+	 * Sets and optionally creates a state if it doies not exists
+	 */
+	setStateOrCreate(stateID, stateValue, options){
+		
+		if(!options || !options.common || !options.common.type){
+			this.log.error("No type defined for object " + stateID + "!")
+			return;
+		}
+		
+		const common = {
+			...{
+				name: "defaultname",
+				type: "string",
+				role: "value",
+				read: true,
+				write: false,
+			},
+			...options.common
+		};			
+
+		this.setObjectNotExists(stateID, {
+			type: "state",
+			common: common,
+			native: {},
+		}, (err) => {
+			if (!err) {
+				// Set state
+				this.setState(stateID, {
+					val: stateValue,
+					ack: true
+				});
+			} else {
+				this.log.error("Error creating state " + stateID + ": " + err);
+			}
+		});
+	}
+
+	/**
+	 * Downloads a custm plant image
+	 */
+	async downloadImage(url, filename, token) {		
+		
+		return new Promise((resolve, reject) => {
+			
+			//const savePath = path.join(this.filesBasePath, filename);
+			
+			// Create path recursive
+			/*
+			try{
+				fs.mkdirSync(savePath.substring(0, savePath.lastIndexOf('/')), { recursive: true }); 
+			}catch(error){
+				reject(new Error("Failed to create path: " + error.message));
+			}*/				
+			
+			this.log.debug("Download " + url + " -> " + filename);
+			
+			axios({
+				method: 'get',
+				url: url,
+				responseType: 'arraybuffer', // Ensures we handle the data as a stream
+				headers: {
+					"Authorization": "Bearer " + token,
+				}
+			})
+			.then((response) => {	
+
+				if (!response.data) {
+					reject(new Error("Response does not contain data"));
+				}			
+				
+				this.log.debug("Download successfull");
+				
+				const buffer = Buffer.from(response.data, 'binary');				
+				this.writeFileAsync(this.name, filename, buffer)
+					.then(() => {
+						resolve("/" + path.join(this.name, filename));
+					});				
+				
+
+				/*
+				// Create a writable stream to save the file
+				const writer = fs.createWriteStream(savePath);
+
+				// Pipe the response stream to the file
+				response.data.pipe(writer);
+
+				// Handle stream events
+				writer.on('finish', () => {
+					this.log.debug("Download successfull");
+					resolve(filename);
+				});
+				writer.on('error', (err) => {
+					fs.unlink(savePath, () => {}); // Clean up incomplete file
+					reject(err);
+				});
+				*/
+			
+				
+			})
+            .catch((error) => {
+				reject(new Error("Failed to download image: " + error.message));
+			});			
+		});			
+	}
 
 	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
 	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.

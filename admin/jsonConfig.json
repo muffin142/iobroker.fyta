@@ -8,17 +8,13 @@
 		  "en": "Password",
 		  "de": "Passwort"
 		},
-		"Order of gardens and plants": {
-		  "en": "Order of gardens and plants",
-		  "de": "Anordnung der Datenpunkte für Gärten und Pflanzen"
+		"Name for virtual garden": {
+		  "en": "Name for virtual garden",
+		  "de": "Name für virtuellen Garten"
 		},
-		"Nested plants in gardens": {
-		  "en": "Nested plants in gardens",
-		  "de": "Pflanzen in ihren Gärten verschachteln"
-		},
-		"Flat structure": {
-		  "en": "Flat structure: Plants next to gardens",
-		  "de": "Flache Struktur: Pflanzen parallel zu Gärten"
+		"Garden that plants are assigned to when they dont belong to any other garden": {
+		  "en": "Garden that plants are assigned to when they dont belong to any other garden",
+		  "de": "Garten, dem Pflanzen zugeordnet werden, wenn sie zu keinem anderen Garten gehören"
 		},
 		"Clear all data on next start": {
 		  "en": "Clear all data on next start",
@@ -37,20 +33,11 @@
 			"label": "Password",
 			"newLine": true
 		},
-		"dataLayout": {
+		"virtualGardenName": {
+			"type": "text",
+			"label": "Name for virtual garden",
 			"newLine": true,
-			"type": "select",
-			"label": "Order of gardens and plants",
-			"options": [
-				{
-					"label": "Nested plants in gardens",
-					"value": "nested"
-				},
-				{
-					"label": "Flat structure",
-					"value": "flat"
-				}
-			]
+			"help": "Garden that plants are assigned to when they dont belong to any other garden",
 		},
 		"clearOnStartup": {
 			"newLine": true,

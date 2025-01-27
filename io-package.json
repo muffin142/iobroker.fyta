@@ -1,6 +1,6 @@
 {
 	"common": {
-		"name": "fyta",
+		"name": "FYTA",
 		"version": "0.0.1",
 		"news": {
 			"0.0.1": {
@@ -59,10 +59,11 @@
 	"native": {
 		"email": "",
 		"password": "",
-		"dataLayout": "nested",
+		"virtualGardenName": "Ithilien",
 		"clearOnStartup": false
 	},
-	"objects": [],
+	"objects": [
+	],
 	"instanceObjects": [
 		{
 			"_id": "info",
@@ -77,11 +78,30 @@
 			"type": "state",
 			"common": {
 				"role": "indicator.connected",
-				"name": "Device or service connected",
+				"name": {
+					"en": "Cloud connected",
+					"de": "Mit Cloud verbunden"
+				},
 				"type": "boolean",
 				"read": true,
 				"write": false,
 				"def": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.last_update",
+			"type": "state",
+			"common": {
+				"role": "state",
+				"name": {
+					"en": "Time at which the states were last updated",
+					"de": "Zeitpunkt des letzten Updates"
+				},
+				"type": "string",
+				"read": true,
+				"write": false,
+				"def": ""
 			},
 			"native": {}
 		}
