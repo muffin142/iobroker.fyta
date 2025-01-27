@@ -1,6 +1,6 @@
 {
 	"common": {
-		"name": "FYTA",
+		"name": "fyta",
 		"version": "0.0.1",
 		"news": {
 			"0.0.1": {
@@ -10,7 +10,7 @@
 		},
 		"titleLang": {
 			"en": "FYTA",
-			"de": "Fyta"			
+			"de": "FYTA"			
 		},
 		"desc": {
 			"en": "Adapter to connect ioBroker to FYTA plant sensors",
@@ -62,7 +62,17 @@
 		"virtualGardenName": "Ithilien",
 		"clearOnStartup": false
 	},
+	"protectedNative": [	
+		"password"
+	],
 	"objects": [
+		{
+		  "_id": "fyta",
+		  "type": "meta",
+		  "common": {
+			"name": "FYTA files"
+		  }
+		}
 	],
 	"instanceObjects": [
 		{

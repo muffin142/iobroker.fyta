@@ -48,7 +48,7 @@ class Fyta extends utils.Adapter {
 						this.log.debug("Skip state: " + key);
 						continue;
 					}					
-					//await this.delObjectAsync(key);
+					await this.delObjectAsync(key);
 					this.log.debug("Deleted state: " + key);
 				}
 
@@ -224,6 +224,7 @@ class Fyta extends utils.Adapter {
 						type: "device",
 						common: {
 							name: garden.garden_name,
+							icon: "/icons/garden.png"
 						},
 						native: {},
 					});
@@ -308,6 +309,7 @@ class Fyta extends utils.Adapter {
 							type: "device",
 							common: {
 								name: "Virtual garden for plants not belonging to any garden",
+								icon: "/icons/garden.png"
 							},
 							native: {},
 						});
@@ -319,6 +321,7 @@ class Fyta extends utils.Adapter {
 						type: "device",
 						common: {
 							name: plant.nickname,
+							icon: "/icons/plant.png"
 						},
 						native: {},
 					});
