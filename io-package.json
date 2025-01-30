@@ -10,11 +10,29 @@
 		},
 		"titleLang": {
 			"en": "FYTA",
-			"de": "FYTA"			
+			"de": "FYTA",
+			"pt":"FYTA",
+			"nl":"FYTA",
+			"fr":"FYTA",
+			"it":"FYTA",
+			"es":"FYTA",
+			"pl":"FYTA",
+			"uk":"FYTA",
+			"ru":"",
+			"zh-cn":"FYTA"
 		},
 		"desc": {
 			"en": "Adapter to connect ioBroker to FYTA plant sensors",
-			"de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden"
+			"de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden",			
+			"pt": "Ligue um ioBroker com sensores de planta FYTA",
+			"nl": "Verbind een ioBroker met FYTA-plantensensoren",
+			"fr": "Adaptateur un ioBroker avec capteurs FYTA pour la connexion",
+			"it": "Adattatore ioBroker con sensori FYTA per la connessione",
+			"es": "Adaptador de ioBroker con sensores FYTA para conexión",
+			"pl": "Połącz ioBroker z czujnikami zakładu FYTA",
+			"uk": "Адаптер ioBroker з датчиками FYTA для підключення",			
+			"ru":"",
+			"zh-cn":"適配器 ioBroker 與 FYTA 感測器連接"
 		},
 		"authors": [
 			"muffin142 <muffin142@outlook.com>"
