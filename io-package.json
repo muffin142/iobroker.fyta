@@ -5,7 +5,16 @@
 		"news": {
 			"0.1.0": {
 				"en": "initial release",
-				"de": "Erstveröffentlichung"
+				"de": "Erstveröffentlichung",
+				"pt":"Primeira publicação",
+				"nl":"EHBO-doos",
+				"fr":"Trousse de secours",
+				"it":"Kit di pronto soccorso",
+				"es":"Botiquín de primeros auxilios",
+				"pl":"Pierwsza publikacja",
+				"uk":"Аптечка першої допомоги",
+				"ru":"Аптечка первой помощи",
+				"zh-cn":"急救箱"
 			}
 		},
 		"titleLang": {
