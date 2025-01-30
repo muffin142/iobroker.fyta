@@ -18,7 +18,7 @@
 			"es":"FYTA",
 			"pl":"FYTA",
 			"uk":"FYTA",
-			"ru":"",
+			"ru":"FYTA",
 			"zh-cn":"FYTA"
 		},
 		"desc": {
@@ -31,7 +31,7 @@
 			"es": "Adaptador de ioBroker con sensores FYTA para conexión",
 			"pl": "Połącz ioBroker z czujnikami zakładu FYTA",
 			"uk": "Адаптер ioBroker з датчиками FYTA для підключення",			
-			"ru":"",
+			"ru": "Адаптер ioBroker с датчиками FYTA для подключения",
 			"zh-cn":"適配器 ioBroker 與 FYTA 感測器連接"
 		},
 		"authors": [
