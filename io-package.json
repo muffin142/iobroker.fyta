@@ -1,13 +1,14 @@
 {
 	"common": {
 		"name": "fyta",
-		"version": "0.0.1",
+		"version": "0.1.0",
 		"news": {
-			"0.0.1": {
+			"0.1.0": {
 				"en": "initial release",
 				"de": "Erstveröffentlichung"
 			}
 		},
+		"title": "FYTA",
 		"titleLang": {
 			"en": "FYTA",
 			"de": "FYTA"			
@@ -17,13 +18,10 @@
 			"de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden"
 		},
 		"authors": [
-			"muffin142 <github@marvside.de>"
+			"muffin142 <muffin142@outlook.com>"
 		],
 		"keywords": [
-			"ioBroker",
-			"template",
-			"Smart Home",
-			"home automation"
+			"fyta"
 		],
 		"licenseInformation": {
 			"type": "free",

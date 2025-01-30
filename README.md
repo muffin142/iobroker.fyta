@@ -3,10 +3,10 @@
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.fyta.svg)](https://www.npmjs.com/package/iobroker.fyta)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fyta.svg)](https://www.npmjs.com/package/iobroker.fyta)
-<!--
+
 ![Number of Installations](https://iobroker.live/badges/fyta-installed.svg)
 ![Current version in stable repository](https://iobroker.live/badges/fyta-stable.svg)
-
+<!--
 [![NPM](https://nodei.co/npm/iobroker.fyta.png?downloads=true)](https://nodei.co/npm/iobroker.fyta/)
 
 **Tests:** ![Test and Release](https://github.com/muffin142/ioBroker.fyta/workflows/Test%20and%20Release/badge.svg)
@@ -27,7 +27,7 @@ Adapter to connect ioBroker to FYTA plant sensors
 ## License
 MIT License
 
-Copyright (c) 2025 muffin142 <github@marvside.de>
+Copyright (c) 2025 muffin142 <muffin142@outlook.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
