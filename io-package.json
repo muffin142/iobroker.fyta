@@ -21,7 +21,9 @@
 			"muffin142 <muffin142@outlook.com>"
 		],
 		"keywords": [
-			"fyta"
+			"fyta",
+			"fyta hub",
+			"fyta beam"
 		],
 		"licenseInformation": {
 			"type": "free",
@@ -31,7 +33,7 @@
 		"icon": "fyta.png",
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/muffin142/iobroker.fyta/main/admin/fyta.png",
-		"readme": "https://github.com/muffin142/iobroker.fyta/blob/main/README.md",
+		"readme": "https://github.com/muffin142/ioBroker.fyta/blob/main/README.md",
 		"loglevel": "info",
 		"tier": 3,
 		"mode": "daemon",
@@ -61,6 +63,9 @@
 		"clearOnStartup": false
 	},
 	"protectedNative": [	
+		"password"
+	],
+	"encryptedNative": [	
 		"password"
 	],
 	"objects": [

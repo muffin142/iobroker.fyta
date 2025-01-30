@@ -37,7 +37,7 @@
 			"type": "text",
 			"label": "Name for virtual garden",
 			"newLine": true,
-			"help": "Garden that plants are assigned to when they dont belong to any other garden",
+			"help": "Garden that plants are assigned to when they dont belong to any other garden"
 		},
 		"clearOnStartup": {
 			"newLine": true,

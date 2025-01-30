@@ -1,22 +1,21 @@
 {
   "name": "iobroker.fyta",
   "version": "0.1.0",
-  "description": "fyta11",
+  "description": "Adapter to connect ioBroker to FYTA plant sensors",
   "author": {
     "name": "muffin142",
     "email": "muffin142@outlook.com"
   },
-  "homepage": "https://github.com/muffin142/iobroker.fyta",
+  "homepage": "https://github.com/muffin142/ioBroker.fyta",
   "license": "MIT",
   "keywords": [
-    "ioBroker",
-    "template",
-    "Smart Home",
-    "home automation"
+    "fyta",
+	"fyta hub",
+	"fyta beam"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/muffin142/iobroker.fyta.git"
+    "url": "https://github.com/muffin142/ioBroker.fyta.git"
   },
   "engines": {
     "node": ">= 20"
