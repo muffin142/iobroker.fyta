@@ -20,7 +20,7 @@ Adapter to connect ioBroker to FYTA plant sensors
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 7.4.19 (2025-01-30)
+### 0.1.0 (2025-01-30)
 -   initial release
 
 ## License

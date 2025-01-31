@@ -26,23 +26,43 @@
 		"email": {
 			"type": "text",
 			"label": "eMail",
-			"newLine": true
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 6,
+			"lg": 4,
+			"xl": 4
 		},
 		"password": {
 			"type": "password",
 			"label": "Password",
-			"newLine": true
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 6,
+			"lg": 4,
+			"xl": 4
 		},
 		"virtualGardenName": {
 			"type": "text",
 			"label": "Name for virtual garden",
 			"newLine": true,
-			"help": "Garden that plants are assigned to when they dont belong to any other garden"
+			"help": "Garden that plants are assigned to when they dont belong to any other garden",
+			"xs": 12,
+			"sm": 12,
+			"md": 6,
+			"lg": 4,
+			"xl": 4
 		},
 		"clearOnStartup": {
 			"newLine": true,
 			"type": "checkbox",
-			"label": "Clear all data on next start"          
+			"label": "Clear all data on next start",       
+			"xs": 12,
+			"sm": 12,
+			"md": 6,
+			"lg": 4,
+			"xl": 4
 		}
 	}
 }
