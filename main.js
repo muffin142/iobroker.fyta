@@ -74,6 +74,7 @@ class Fyta extends utils.Adapter {
 			this.changeOption("clearOnStartup", false);
 		}
 
+
 		// eMail and password set?
 		if(this.config.email == "" || this.config.password == ""){
 			this.log.error("eMail and/or password not provided. Please check config and restart.");
@@ -82,30 +83,27 @@ class Fyta extends utils.Adapter {
 
 		this.log.info("Loading gardens and plants for " + this.config.email);
 
-		// Staring interval if initial lod is successfull
-		this.loadDataInterval = (() => {
+		// Initial load
+		this.loadDataInterval = null;
 
-			// Initial load
-			this.log.debug("Start initial load");
-			const result = this.loadData();
+		this.log.debug("Start initial load");
+		const result = await this.loadData();
 
-			if(result){
-				this.log.debug("Initial load sucessfull, starting interval");
-				const interval = 30 * 60 * 1000;
-				return(setInterval(() => {
-					const result = this.loadData();
-					if(!result || result == null){
-						clearInterval(this.loadDataInterval);
-						this.log.info("Stopped interval because of previous errors.");
-					}
-				}, interval));
-			}else{
-				this.log.info("Stopped interval because of previous errors.");
-			}
-
-			return null;
-		})();
-
+		if(result){
+			this.log.debug("Initial load sucessfull, starting interval");
+			const interval = 30 * 60 * 1000;
+			this.loadDataInterval = setInterval(() => {
+				this.loadData()
+					.then((result)=> {
+						if(!result || result == null){
+							clearInterval(this.loadDataInterval);
+							this.log.info("Stopped interval because of previous errors.");
+						}
+					});
+			}, interval);
+		}else{
+			this.log.info("Interval not started because of previous errors.");
+		}
 	}
 
 	/**
@@ -523,7 +521,7 @@ class Fyta extends utils.Adapter {
 	 */
 	setStatesOrCreate(strParentObjectID, obj, arrStatesDefinition){
 		for (const [stateSourceObject, stateDefinition] of Object.entries(arrStatesDefinition)) {
-			if(!(stateSourceObject in obj)){
+			if(!(stateSourceObject in obj) && !("def" in stateDefinition)){
 				this.log.warn("There is not a property \""+ stateSourceObject + "\"");
 				continue;
 			}
