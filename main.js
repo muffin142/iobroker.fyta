@@ -8,8 +8,7 @@
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
 const axios = require("axios");
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
 
 class Fyta extends utils.Adapter {
 
@@ -26,7 +25,7 @@ class Fyta extends utils.Adapter {
 		// this.on("objectChange", this.onObjectChange.bind(this));
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
-		
+
 	}
 
 	/**
@@ -37,7 +36,7 @@ class Fyta extends utils.Adapter {
 		// Clear all Data?
 		if(this.config.clearOnStartup){
 			this.log.info("Delete all states and files as defined by config");
-			
+
 			// Delete objects and states
 			try {
 				// Holen aller Objekte im Namespace des Adapters
@@ -48,7 +47,7 @@ class Fyta extends utils.Adapter {
 					if(key.indexOf("0.info") > -1){
 						this.log.debug("Skip state: " + key);
 						continue;
-					}					
+					}
 					await this.delObjectAsync(key);
 					this.log.debug("Deleted state: " + key);
 				}
@@ -57,7 +56,7 @@ class Fyta extends utils.Adapter {
 			} catch (err) {
 				this.log.error("Error deleting states: " + err.message);
 			}
-			
+
 			// Delete files
 			try{
 				const files = await this.readDirAsync(this.name, "plant");
@@ -65,36 +64,36 @@ class Fyta extends utils.Adapter {
 					const filename = path.join("plant", file.file);
 					await this.delFile(this.name, filename);
 					this.log.debug("Deleted file: " + filename);
-				}				
-				this.log.info("All files deleted successfully");            
+				}
+				this.log.info("All files deleted successfully");
 			}catch(err){
-				this.log.error("Error deleting files: " + err.message);				
+				this.log.error("Error deleting files: " + err.message);
 			}
-			
+
 			//this.config.clearOnStartup = false;
 			this.changeOption("clearOnStartup", false);
-		}		
-				
+		}
+
 		// eMail and password set?
 		if(this.config.email == "" || this.config.password == ""){
 			this.log.error("eMail and/or password not provided. Please check config and restart.");
-			return;			
-		}		
+			return;
+		}
 
 		this.log.info("Loading gardens and plants for " + this.config.email);
 
 		// Staring interval if initial lod is successfull
 		this.loadDataInterval = (() => {
-			
+
 			// Initial load
 			this.log.debug("Start initial load");
-			let result = this.loadData();		
-			
+			const result = this.loadData();
+
 			if(result){
 				this.log.debug("Initial load sucessfull, starting interval");
-				let interval = 30 * 60 * 1000;
+				const interval = 30 * 60 * 1000;
 				return(setInterval(() => {
-					let result = this.loadData();
+					const result = this.loadData();
 					if(!result || result == null){
 						clearInterval(this.loadDataInterval);
 						this.log.info("Stopped interval because of previous errors.");
@@ -103,9 +102,9 @@ class Fyta extends utils.Adapter {
 			}else{
 				this.log.info("Stopped interval because of previous errors.");
 			}
-			
+
 			return null;
-		})();		
+		})();
 
 	}
 
@@ -161,9 +160,9 @@ class Fyta extends utils.Adapter {
 
 				this.setState("info.connection", true, true);
 				this.log.debug("Got access_token, returning");
-				
+
 				return response.data.access_token;
-				
+
 			}else{
 				this.log.error("Login was not successfull (HTTP-Status " + response.status + ")");
 			}
@@ -175,7 +174,7 @@ class Fyta extends utils.Adapter {
 		}
 
 		this.setState("info.connection", false, true);
-		
+
 		return null;
 	}
 
@@ -256,7 +255,7 @@ class Fyta extends utils.Adapter {
 						"thumb_path": 	{name: "thumb_path", 	type: "string",		role: "url",			def: ""	},
 						"is_shared":	{name: "is_shared",		type: "boolean",	role: "value",			def: false}
 					};
-					this.setStatesOrCreate(gardenObjectID, garden, statesDefintion);					
+					this.setStatesOrCreate(gardenObjectID, garden, statesDefintion);
 				});
 
 				//
@@ -267,30 +266,30 @@ class Fyta extends utils.Adapter {
 					// Create plant object
 					let plantObjectID = "";
 					//if(this.options.dataLayout == "nested"){
-						// Place plant-object in garden
-						
-						// Defaulting to virtual garden
-						plantObjectID =  virtualGardenNameCleaned + "." + this.cleanName(plant.nickname);
-						
-						// Lookup for garden
-						if(plant.garden && plant.garden.id){
-							const garden = data.gardens.find(g => g.id === plant.garden.id);
-							if(garden === null){
-								this.log.error("Can't find defined garden for plant " + plant.nickname + " (ID " + plant.id + ")");
-								return;
-							}
-							this.log.debug("Belongs to garden " + JSON.stringify(garden));
-							plantObjectID = this.cleanName(garden.garden_name) + "." + this.cleanName(plant.nickname);
+					// Place plant-object in garden
+
+					// Defaulting to virtual garden
+					plantObjectID =  virtualGardenNameCleaned + "." + this.cleanName(plant.nickname);
+
+					// Lookup for garden
+					if(plant.garden && plant.garden.id){
+						const garden = data.gardens.find(g => g.id === plant.garden.id);
+						if(garden === null){
+							this.log.error("Can't find defined garden for plant " + plant.nickname + " (ID " + plant.id + ")");
+							return;
 						}
+						this.log.debug("Belongs to garden " + JSON.stringify(garden));
+						plantObjectID = this.cleanName(garden.garden_name) + "." + this.cleanName(plant.nickname);
+					}
 					//}else if(this.options.dataLayout == "flat"){
 					//	plantObjectID = this.cleanName(plant.nickname);
 					//}else{
 					//	this.log.error("Unknown value for option \"dataLayout\": " + JSON.stringify(this.options.dataLayout));
 					//	return;
 					//}
-					
+
 					// Need to create virtual garden?
-					if(plantObjectID.indexOf(virtualGardenNameCleaned + ".") > -1){							
+					if(plantObjectID.indexOf(virtualGardenNameCleaned + ".") > -1){
 						this.getObject(virtualGardenNameCleaned, (err, obj) => {
 							if (!obj) {
 								this.log.debug("Virtual garden does not exist, creating...");
@@ -304,9 +303,9 @@ class Fyta extends utils.Adapter {
 										icon: "/icons/garden.png"
 									},
 									native: {},
-								});												
-								this.setStateOrCreate(virtualGardenNameCleaned + ".garden_name", this.config.virtualGardenName, {common:{type: "string"}});								
-							} 
+								});
+								this.setStateOrCreate(virtualGardenNameCleaned + ".garden_name", this.config.virtualGardenName, {common:{type: "string"}});
+							}
 						});
 					}
 
@@ -348,11 +347,11 @@ class Fyta extends utils.Adapter {
 						"isSilent": 			{name: "isSilent", 				type: "boolean",	role: "value",			def: false	},
 						"isDoingGreat": 		{name: "isDoingGreat", 			type: "boolean",	role: "value",			def: false	}
 					};
-					this.setStatesOrCreate(plantObjectID, plant, plantStatesDefintion);					
-					
+					this.setStatesOrCreate(plantObjectID, plant, plantStatesDefintion);
+
 					// Download Images if present
 					["thumb_path", "origin_path"].forEach(async (property)=> {
-						if(plant[property] !== ""){							
+						if(plant[property] !== ""){
 
 							const filename = path.join("plant", plant["id"] + "_" + (property.split("_")[0]) + ".jpg");
 
@@ -362,7 +361,7 @@ class Fyta extends utils.Adapter {
 								return;
 							}
 							this.downloadImage(plant[property], filename, token)
-								.then((filename) => {	
+								.then((filename) => {
 									this.setStateOrCreate(plantObjectID + "." + property + "_local", filename, {
 										common: {
 											name: property,
@@ -375,13 +374,13 @@ class Fyta extends utils.Adapter {
 								})
 								.catch((error) => {
 									this.log.error(error.message);
-								});								
+								});
 						}
 					});
-					
+
 					// Looking for sensor
 					if(plant.sensor !== null){
-						const sensorObjectID = plantObjectID + ".sensor"
+						const sensorObjectID = plantObjectID + ".sensor";
 						this.log.debug("Create sensor-object if not exists");
 						this.setObjectNotExists(sensorObjectID, {
 							type: "device",
@@ -391,20 +390,20 @@ class Fyta extends utils.Adapter {
 							},
 							native: {},
 						});
-						
+
 						const sensorStatesDefinition = {
 							"id": 					{name: "ID", 					type: "string",		role: "value" 				},
 							"status": 				{name: "status", 				type: "number",		role: "info.status",		def: 0,		states: {"0":"none","1":"correct","2":"error"} },
 							"version": 				{name: "version", 				type: "string",		role: "info.firmware",		def: ""		},
 							"is_battery_low": 		{name: "is_battery_low", 		type: "boolean",	role: "indicator.lowbat",	def: false	},
 							"received_data_at": 	{name: "received_data_at", 		type: "string",		role: "date",				def: ""		},
-						};						
-						this.setStatesOrCreate(sensorObjectID, plant.sensor, sensorStatesDefinition);						
+						};
+						this.setStatesOrCreate(sensorObjectID, plant.sensor, sensorStatesDefinition);
 					}
-					
+
 					// Looking for hub
 					if(plant.hub !== null){
-						const hubObjectID = plantObjectID + ".hub"
+						const hubObjectID = plantObjectID + ".hub";
 						this.log.debug("Create hub-object if not exists");
 						this.setObjectNotExists(hubObjectID, {
 							type: "device",
@@ -414,24 +413,24 @@ class Fyta extends utils.Adapter {
 							},
 							native: {},
 						});
-						
+
 						const hubStatesDefinition = {
 							"id": 					{name: "ID", 					type: "number", 	role: "value" 				},
 							"hub_id": 				{name: "hub_id", 				type: "string",		role: "value",				def: ""		},
 							"hub_name": 			{name: "hub_id", 				type: "string",		role: "info.name",			def: ""		},
-							"version": 				{name: "version", 				type: "string",		role: "info.firmware",		def: ""		},							
+							"version": 				{name: "version", 				type: "string",		role: "info.firmware",		def: ""		},
 							"status": 				{name: "status", 				type: "number",		role: "info.status",		def: 0,		states: {"0":"none","1":"correct","2":"error"} },
 							"received_data_at": 	{name: "received_data_at", 		type: "string",		role: "date",				def: ""		},
 							"reached_hub_at": 		{name: "reached_hub_at", 		type: "string",		role: "date",				def: ""		},
 						};
-						this.setStatesOrCreate(hubObjectID, plant.hub, hubStatesDefinition);										
+						this.setStatesOrCreate(hubObjectID, plant.hub, hubStatesDefinition);
 					}
 				});
 
 				this.setState("info.last_update", (new Date()).toLocaleString(), true);
 
 				return true;
-			}		
+			}
 			return true;
 		}
 		return false;
@@ -457,7 +456,7 @@ class Fyta extends utils.Adapter {
 
 		return string;
 	}
-	
+
 	// Rekursive Funktion, um in verschachtelten Objekten nach einem Wert zu suchen
 	/*
 	getNestedValue(obj, keys) {
@@ -475,7 +474,7 @@ class Fyta extends utils.Adapter {
 		return undefined; // Wenn der Wert nicht gefunden wird
 	}
 	*/
-	
+
 	/**
 	 * Stops execiution of adapter. Depending on instance settings it may restart.
 	 */
@@ -487,7 +486,7 @@ class Fyta extends utils.Adapter {
 			process.exit(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
 		}
 	}
-	
+
 	/**
 	 * Changes a option for current instance
 	 * @param {string} option
@@ -500,7 +499,7 @@ class Fyta extends utils.Adapter {
 		// Get instances object
 		this.getForeignObject(objectId, (err, obj) => {
 			if (err || !obj) {
-				adapter.log.error("Error getting settings-object: " + (err || 'Object not found'));
+				this.log.error("Error getting settings-object: " + (err || "Object not found"));
 				return;
 			}
 
@@ -524,11 +523,11 @@ class Fyta extends utils.Adapter {
 	 */
 	setStatesOrCreate(strParentObjectID, obj, arrStatesDefinition){
 		for (const [stateSourceObject, stateDefinition] of Object.entries(arrStatesDefinition)) {
-			if(!stateSourceObject in obj){
+			if(!(stateSourceObject in obj)){
 				this.log.warn("There is not a property \""+ stateSourceObject + "\"");
 				continue;
 			}
-			
+
 			const stateID = strParentObjectID + "." + stateDefinition.name;
 			let stateValue = null;
 			if(stateSourceObject in obj){
@@ -554,8 +553,8 @@ class Fyta extends utils.Adapter {
 					read: true,
 					write: false
 				}
-			});				
-		}		
+			});
+		}
 	}
 
 	/**
@@ -564,12 +563,12 @@ class Fyta extends utils.Adapter {
 	 * @param {string | boolean | number | null} stateValue
 	 */
 	setStateOrCreate(stateID, stateValue, options){
-		
+
 		if(!options || !options.common || !options.common.type){
-			this.log.error("No type defined for object " + stateID + "!")
+			this.log.error("No type defined for object " + stateID + "!");
 			return;
 		}
-		
+
 		const common = {
 			...{
 				//name: "defaultname",
@@ -579,7 +578,7 @@ class Fyta extends utils.Adapter {
 				write: false,
 			},
 			...options.common
-		};			
+		};
 
 		this.setObjectNotExists(stateID, {
 			type: "state",
@@ -604,66 +603,45 @@ class Fyta extends utils.Adapter {
 	 * @param {string} filename
 	 * @param {string} token
 	 */
-	async downloadImage(url, filename, token) {		
-		
+	async downloadImage(url, filename, token) {
+
 		return new Promise((resolve, reject) => {
-			
+
 			this.log.debug("Download " + url + " -> " + filename);
-			
+
 			axios({
-				method: 'get',
+				method: "get",
 				url: url,
-				responseType: 'arraybuffer', // Ensures we handle the data as a stream
+				responseType: "arraybuffer", // Ensures we handle the data as a stream
 				headers: {
 					"Authorization": "Bearer " + token,
 				}
 			})
-			.then((response) => {	
+				.then((response) => {
 
-				if (!response.data) {
-					reject(new Error("Response does not contain data"));
-				}			
-				
-				this.log.debug("Download successfull");
-				
-				const buffer = Buffer.from(response.data, 'binary');				
-				this.writeFileAsync(this.name, filename, buffer)
-					.then(() => {
-						resolve("/" + path.join(this.name, filename));
-					});				
-				
+					if (!response.data) {
+						reject(new Error("Response does not contain data"));
+					}
 
-				/*
-				// Create a writable stream to save the file
-				const writer = fs.createWriteStream(savePath);
-
-				// Pipe the response stream to the file
-				response.data.pipe(writer);
-
-				// Handle stream events
-				writer.on('finish', () => {
 					this.log.debug("Download successfull");
-					resolve(filename);
+
+					const buffer = Buffer.from(response.data, "binary");
+					this.writeFileAsync(this.name, filename, buffer)
+						.then(() => {
+							resolve("/" + path.join(this.name, filename));
+						});
+				})
+				.catch((error) => {
+					reject(new Error("Failed to download image: " + error.message));
 				});
-				writer.on('error', (err) => {
-					fs.unlink(savePath, () => {}); // Clean up incomplete file
-					reject(err);
-				});
-				*/
-			
-				
-			})
-            .catch((error) => {
-				reject(new Error("Failed to download image: " + error.message));
-			});			
-		});			
+		});
 	}
-	
+
 	/**
 	 * Checks is on object exists
 	 * @param {string} objectId
 	 */
-	 /*
+	/*
 	async checkObjectExists(objectId) {
 		return new Promise((resolve, reject) => {
 			this.getObject(objectId, (err, obj) => {
