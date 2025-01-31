@@ -23,6 +23,9 @@ Adapter to connect ioBroker to FYTA plant sensors
 ### 0.1.0 (2025-01-30)
 -   initial release
 
+### 0.1.1 (2025-01-31)
+-   minor changes to align with requirements of ioBroker-Adapter-Checker
+
 ## License
 MIT License
 

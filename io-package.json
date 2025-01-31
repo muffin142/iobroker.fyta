@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "fyta",
-		"version": "0.1.0",
+		"version": "0.1.1",
 		"news": {
+			"0.1.1": {
+				"en": "minor changes to align with requirements of ioBroker-Adapter-Checker",
+				"de": "Kleinere Änderungen zur Anpassung an die Anforderungen des ioBroker-Adapter-Checker",
+			},
 			"0.1.0": {
 				"en": "initial release",
 				"de": "Erstveröffentlichung",
