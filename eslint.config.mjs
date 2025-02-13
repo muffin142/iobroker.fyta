@@ -17,7 +17,8 @@ export default [
             'admin/build', 
             'admin/words.js',
             'admin/admin.d.ts',
-            '**/adapter-config.d.ts'     
+            '**/adapter-config.d.ts',
+			'lib/statesDefinition.js'
         ] 
     },
 
@@ -25,7 +26,7 @@ export default [
         // you may disable some 'jsdoc' warnings - but using jsdoc is highly recommended
         // as this improves maintainability. jsdoc warnings will not block buiuld process.
         rules: {
-            // 'jsdoc/require-jsdoc': 'off',
+             'jsdoc/require-jsdoc': 'off',
         },
     },
     
