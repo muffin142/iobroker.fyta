@@ -1,152 +1,202 @@
 {
-	"common": {
-		"name": "fyta",
-		"version": "0.1.2",
-		"news": {
-			"0.1.2": {
-				"en": "minor changes to align with requirements of ioBroker-Adapter-Checker",
-				"de": "Kleinere Änderungen zur Anpassung an die Anforderungen des ioBroker-Adapter-Checker"
-			},
-			"0.1.0": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"pt":"Primeira publicação",
-				"nl":"EHBO-doos",
-				"fr":"Trousse de secours",
-				"it":"Kit di pronto soccorso",
-				"es":"Botiquín de primeros auxilios",
-				"pl":"Pierwsza publikacja",
-				"uk":"Аптечка першої допомоги",
-				"ru":"Аптечка первой помощи",
-				"zh-cn":"急救箱"
-			}
-		},
-		"titleLang": {
-			"en": "FYTA",
-			"de": "FYTA",
-			"pt":"FYTA",
-			"nl":"FYTA",
-			"fr":"FYTA",
-			"it":"FYTA",
-			"es":"FYTA",
-			"pl":"FYTA",
-			"uk":"FYTA",
-			"ru":"FYTA",
-			"zh-cn":"FYTA"
-		},
-		"desc": {
-			"en": "Adapter to connect ioBroker to FYTA plant sensors",
-			"de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden",			
-			"pt": "Ligue um ioBroker com sensores de planta FYTA",
-			"nl": "Verbind een ioBroker met FYTA-plantensensoren",
-			"fr": "Adaptateur un ioBroker avec capteurs FYTA pour la connexion",
-			"it": "Adattatore ioBroker con sensori FYTA per la connessione",
-			"es": "Adaptador de ioBroker con sensores FYTA para conexión",
-			"pl": "Połącz ioBroker z czujnikami zakładu FYTA",
-			"uk": "Адаптер ioBroker з датчиками FYTA для підключення",			
-			"ru": "Адаптер ioBroker с датчиками FYTA для подключения",
-			"zh-cn":"適配器 ioBroker 與 FYTA 感測器連接"
-		},
-		"authors": [
-			"muffin142 <muffin142@outlook.com>"
-		],
-		"keywords": [
-			"fyta",
-			"fyta hub",
-			"fyta beam"
-		],
-		"licenseInformation": {
-			"type": "free",
-			"license": "MIT"
-		},
-		"platform": "Javascript/Node.js",
-		"icon": "fyta.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/muffin142/iobroker.fyta/main/admin/fyta.png",
-		"readme": "https://github.com/muffin142/ioBroker.fyta/blob/main/README.md",
-		"loglevel": "info",
-		"tier": 3,
-		"mode": "daemon",
-		"type": "garden",
-		"compact": true,
-		"connectionType": "cloud",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json"
-		},		
-		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=6.0.11"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=7.0.0"
-			}
-		]
-	},
-	"native": {
-		"email": "",
-		"password": "",
-		"virtualGardenName": "Ithilien",
-		"clearOnStartup": false
-	},
-	"protectedNative": [	
-		"password"
-	],
-	"encryptedNative": [	
-		"password"
-	],
-	"objects": [
-		{
-		  "_id": "fyta",
-		  "type": "meta",
-		  "common": {
-			"name": "FYTA files"
-		  }
-		}
-	],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": {
+    "common": {
+        "name": "fyta",
+        "version": "0.1.2",
+        "news": {
+            "0.1.2": {
+                "en": "minor changes to align with requirements of ioBroker-Adapter-Checker",
+                "de": "Kleinere Änderungen zur Anpassung an die Anforderungen des ioBroker-Adapter-Checker",
+                "ru": "Незначительные изменения в соответствии с требованиями Iobroker-Adapter-Checker",
+                "pt": "Pequenas mudanças para se alinhar com os requisitos do iobroker-adapter-checker",
+                "nl": "Kleine wijzigingen om af te stemmen op de vereisten van IoBroker-adapter-checker",
+                "fr": "Modifications mineures à s'aligner sur les exigences d'Iobroker-Adapter-Checker",
+                "it": "Modifiche minori da allinearsi con i requisiti di IoBroker-Adapter-Checker",
+                "es": "Cambios menores para alinearse con los requisitos de Iobroker-Adapter-Checker",
+                "pl": "Drobne zmiany w dostosowaniu się do wymagań IOBRoker-Adapter-Checker",
+                "uk": "Незначні зміни для узгодження з вимогами Iobroker-Adapter-Checker",
+                "zh-cn": "与Iobroker-Adapter-Checker的要求保持一致的较小更改"
+            },
+            "0.1.0": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "pt": "Primeira publicação",
+                "nl": "EHBO-doos",
+                "fr": "Trousse de secours",
+                "it": "Kit di pronto soccorso",
+                "es": "Botiquín de primeros auxilios",
+                "pl": "Pierwsza publikacja",
+                "uk": "Аптечка першої допомоги",
+                "ru": "Аптечка первой помощи",
+                "zh-cn": "急救箱"
+            }
+        },
+        "titleLang": {
+            "en": "FYTA",
+            "de": "FYTA",
+            "pt": "FYTA",
+            "nl": "FYTA",
+            "fr": "FYTA",
+            "it": "FYTA",
+            "es": "FYTA",
+            "pl": "FYTA",
+            "uk": "FYTA",
+            "ru": "FYTA",
+            "zh-cn": "FYTA"
+        },
+        "desc": {
+            "en": "Adapter to connect ioBroker to FYTA plant sensors",
+            "de": "Adapter um ioBroker mit FYTA Pflanzensensoren zu verbinden",
+            "pt": "Ligue um ioBroker com sensores de planta FYTA",
+            "nl": "Verbind een ioBroker met FYTA-plantensensoren",
+            "fr": "Adaptateur un ioBroker avec capteurs FYTA pour la connexion",
+            "it": "Adattatore ioBroker con sensori FYTA per la connessione",
+            "es": "Adaptador de ioBroker con sensores FYTA para conexión",
+            "pl": "Połącz ioBroker z czujnikami zakładu FYTA",
+            "uk": "Адаптер ioBroker з датчиками FYTA для підключення",
+            "ru": "Адаптер ioBroker с датчиками FYTA для подключения",
+            "zh-cn": "適配器 ioBroker 與 FYTA 感測器連接"
+        },
+        "authors": [
+            "muffin142 <muffin142@outlook.com>"
+        ],
+        "keywords": [
+            "fyta",
+            "fyta hub",
+            "fyta beam"
+        ],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "fyta.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/muffin142/iobroker.fyta/main/admin/fyta.png",
+        "readme": "https://github.com/muffin142/ioBroker.fyta/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "garden",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=7.0.0"
+            }
+        ]
+    },
+    "native": {
+        "email": "",
+        "password": "",
+        "virtualGardenName": "Ithilien",
+        "clearOnStartup": false
+    },
+    "protectedNative": [
+        "password"
+    ],
+    "encryptedNative": [
+        "password"
+    ],
+    "objects": [
+        {
+            "_id": "fyta",
+            "type": "meta",
+            "common": {
+                "name": {
+					"en": "FYTA files",
+					"de": "FYTA-Dateien",
+					"ru": "FYTA файлы",
+					"pt": "Arquivos FYTA",
+					"nl": "FYTA-bestanden",
+					"fr": "Dossiers FYTA",
+					"it": "File FYTA",
+					"es": "Archivo de FYTA",
+					"pl": "Pliki FYTA",
+					"uk": "Файли FYTA",
+					"zh-cn": "FYTA 文件"
+				}
+            }
+        }
+    ],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": {
+					"en": "Information",
+					"de": "Informationen",
+					"ru": "Информация",
+					"pt": "Informação",
+					"nl": "Informatie",
+					"fr": "Informations",
+					"it": "Informazioni",
+					"es": "Información",
+					"pl": "Informacje",
+					"uk": "Інформація",
+					"zh-cn": "资料"
+				}
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": {
 					"en": "Cloud connected",
-					"de": "Mit Cloud verbunden"
+					"de": "Mit Cloud verbunden",
+					"ru": "Облако подключено",
+					"pt": "Conectado à nuvem",
+					"nl": "Cloud verbonden",
+					"fr": "Nuage connecté",
+					"it": "Cloud collegato",
+					"es": "Cloud conectado",
+					"pl": "Przyłączona chmura",
+					"uk": "Хмарний підключений",
+					"zh-cn": "连接云"
 				},
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.last_update",
-			"type": "state",
-			"common": {
-				"role": "state",
-				"name": {
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.last_update",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": {
 					"en": "Time at which the states were last updated",
-					"de": "Zeitpunkt des letzten Updates"
-				},
-				"type": "string",
-				"read": true,
-				"write": false,
-				"def": ""
-			},
-			"native": {}
-		}
-	]
+					"de": "Zeitpunkt des letzten Updates",
+					"ru": "Время, в которое государства были в последний раз обновлены",
+					"pt": "Tempo em que os estados foram atualizados pela última vez",
+					"nl": "Tijd waarop de staten voor het laatst werden bijgewerkt",
+					"fr": "Dernière mise à jour des états",
+					"it": "Tempo in cui gli stati sono stati aggiornati",
+					"es": "Hora en que los estados fueron actualizados por última vez",
+					"pl": "Czas ostatniej aktualizacji stanów",
+					"uk": "Час, в якому штати були оновлено",
+					"zh-cn": "最后一次更新各州的时间"
+}				,
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        }
+    ]
 }

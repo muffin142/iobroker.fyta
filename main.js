@@ -21,11 +21,7 @@ class Fyta extends utils.Adapter {
 			name: "fyta",
 		});
 		this.on("ready", this.onReady.bind(this));
-		//this.on("stateChange", this.onStateChange.bind(this));
-		// this.on("objectChange", this.onObjectChange.bind(this));
-		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
-
 	}
 
 	/**
@@ -44,7 +40,7 @@ class Fyta extends utils.Adapter {
 
 				// Löschen aller Datenpunkte
 				for (const key of Object.keys(objects)) {
-					if(key.indexOf("0.info") > -1){
+					if(key.indexOf(".info") > -1){
 						this.log.debug("Skip state: " + key);
 						continue;
 					}
@@ -92,17 +88,17 @@ class Fyta extends utils.Adapter {
 		if(result){
 			this.log.debug("Initial load sucessfull, starting interval");
 			const interval = 30 * 60 * 1000;
-			this.loadDataInterval = setInterval(() => {
+			this.loadDataInterval = this.setInterval(() => {
 				this.loadData()
 					.then((result)=> {
 						if(!result || result == null){
-							clearInterval(this.loadDataInterval);
+							this.clearInterval(this.loadDataInterval);
 							this.log.info("Stopped interval because of previous errors.");
 						}
 					});
 			}, interval);
 		}else{
-			this.log.info("Interval not started because of previous errors.");
+			this.log.error("Interval not started because of previous errors.");
 		}
 	}
 
@@ -119,7 +115,7 @@ class Fyta extends utils.Adapter {
 			// clearInterval(interval1);
 
 			if(this.loadDataInterval !== null)
-				clearInterval(this.loadDataInterval);
+				this.clearInterval(this.loadDataInterval);
 
 			callback();
 		} catch (e) {
@@ -142,7 +138,8 @@ class Fyta extends utils.Adapter {
 				password:	password
 			},{
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json",,
+					timeout: 10000 // only wait for 10s
 				}
 			});
 
@@ -188,6 +185,7 @@ class Fyta extends utils.Adapter {
 			const response = await axios.get("https://web.fyta.de/api/user-plant", {
 				headers: {
 					"Authorization": "Bearer " + token,
+					timeout: 10000 // only wait for 10s
 				}
 			});
 
@@ -236,7 +234,7 @@ class Fyta extends utils.Adapter {
 					this.log.debug("Create Object if not exists");
 					const gardenObjectID = this.cleanName(garden.garden_name);
 					this.setObjectNotExists(gardenObjectID, {
-						type: "device",
+						type: "folder",
 						common: {
 							name: garden.garden_name,
 							icon: "/icons/garden.png"
@@ -247,7 +245,7 @@ class Fyta extends utils.Adapter {
 					// Create garden states
 					this.log.debug("Create states...");
 					const statesDefintion = {
-						"id": 			{name: "ID", 			type: "number", 		role: "value"			},
+						"id": 			{name: "ID", 			type: "number", 	role: "value"			},
 						"garden_name": 	{name: "garden_name", 	type: "string",		role: "info.name"		},
 						"origin_path": 	{name: "origin_path", 	type: "string",		role: "url",			def: "" },
 						"thumb_path": 	{name: "thumb_path", 	type: "string",		role: "url",			def: ""	},
@@ -292,7 +290,7 @@ class Fyta extends utils.Adapter {
 							if (!obj) {
 								this.log.debug("Virtual garden does not exist, creating...");
 								this.setObjectNotExists(virtualGardenNameCleaned, {
-									type: "device",
+									type: "folder",
 									common: {
 										name: {
 											"en": "Virtual garden for plants not belonging to any garden",
@@ -310,7 +308,7 @@ class Fyta extends utils.Adapter {
 					// Create plant object
 					this.log.debug("Create plant-object if not exists");
 					this.setObjectNotExists(plantObjectID, {
-						type: "device",
+						type: "folder",
 						common: {
 							name: plant.nickname,
 							icon: "/icons/plant.png"
@@ -634,77 +632,6 @@ class Fyta extends utils.Adapter {
 				});
 		});
 	}
-
-	/**
-	 * Checks is on object exists
-	 * @param {string} objectId
-	 */
-	/*
-	async checkObjectExists(objectId) {
-		return new Promise((resolve, reject) => {
-			this.getObject(objectId, (err, obj) => {
-				if (err) {
-					this.log.error(`Error checking object: ${err}`);
-					reject(err);
-				} else {
-					resolve(!!obj); // Returns true if object exists, false otherwise
-				}
-			});
-		});
-	}
-	*/
-
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
-
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	/*
-	onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
-	}
-	*/
-
-	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === "object" && obj.message) {
-	// 		if (obj.command === "send") {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info("send command");
-
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
-	// 		}
-	// 	}
-	// }
 
 }
 

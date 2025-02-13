@@ -13,7 +13,8 @@
 -->
 ## FYTA adapter for ioBroker
 
-Adapter to connect ioBroker to FYTA plant sensors
+Unofficial Adapter to connect ioBroker to [FYTA plant sensors](https://fyta.de/)
+Sensors can be purchased an the [FYTA Shop](https://fyta.de/collections/all/products/10-beams-1-hub)
 
 ## Changelog
 <!--
