@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fyta",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "news": {
+			"0.1.3": {
+				"en": "minor changes due to release process",
+				"de": "Kleine Anpassungen im zuge des Freigabeprozesses",
+				"ru": "незначительные изменения из-за процесса выпуска",
+				"pt": "pequenas alterações devido ao processo de lançamento",
+				"nl": "kleine wijzigingen als gevolg van het releaseproces",
+				"fr": "changements mineurs dus au processus de libération",
+				"it": "cambiamenti minori dovuti al processo di rilascio",
+				"es": "cambios menores debido al proceso de liberación",
+				"pl": "drobne zmiany spowodowane procesem wydania",
+				"uk": "незначні зміни у процесі релізу",
+				"zh-cn": "由于发布程序造成的小改动"
+			},
             "0.1.2": {
                 "en": "minor changes to align with requirements of ioBroker-Adapter-Checker",
                 "de": "Kleinere Änderungen zur Anpassung an die Anforderungen des ioBroker-Adapter-Checker",
