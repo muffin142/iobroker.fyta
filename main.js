@@ -74,6 +74,7 @@ class Fyta extends utils.Adapter {
 		// eMail and password set?
 		if(this.config.email == "" || this.config.password == ""){
 			this.log.error("eMail and/or password not provided. Please check config and restart.");
+			this.exitAdapter(utils.ExitCodes.INVALID_ADAPTER_CONFIG);
 			return;
 		}
 
@@ -93,14 +94,18 @@ class Fyta extends utils.Adapter {
 					.then((result)=> {
 						if(!result || result == null){
 							this.clearInterval(this.loadDataInterval);
-							this.log.info("Stopped interval because of previous errors.");
+							this.log.error("Stopped interval because of previous errors.");
+							this.exitAdapter();
 						}
 					});
 			}, interval);
 		}else{
 			this.log.error("Interval not started because of previous errors.");
+			this.exitAdapter();
+			return;
 		}
 	}
+	
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -138,7 +143,7 @@ class Fyta extends utils.Adapter {
 				password:	password
 			},{
 				headers: {
-					"Content-Type": "application/json",,
+					"Content-Type": "application/json",
 					timeout: 10000 // only wait for 10s
 				}
 			});
@@ -453,33 +458,20 @@ class Fyta extends utils.Adapter {
 		return string;
 	}
 
-	// Rekursive Funktion, um in verschachtelten Objekten nach einem Wert zu suchen
-	/*
-	getNestedValue(obj, keys) {
-		// Wenn keys ein String ist, teile ihn in ein Array
-		if (typeof keys === "string") {
-			keys = keys.split(".");
-		}
-		const key = keys.shift(); // Hole den ersten Schlüssel aus der Liste
-		if (obj && obj[key] !== undefined) {
-			if (keys.length === 0) {
-				return obj[key]; // Wenn keine weiteren Schlüssel mehr da sind, den Wert zurückgeben
-			}
-			return this.getNestedValue(obj[key], keys); // Rekursiver Aufruf mit dem restlichen Schlüssel
-		}
-		return undefined; // Wenn der Wert nicht gefunden wird
-	}
-	*/
-
 	/**
 	 * Stops execiution of adapter. Depending on instance settings it may restart.
+	 * @param {utils.EXIT_CODES} reason
 	 */
-	exitAdapter(){
+	exitAdapter(reason){
+		if(reason == null){
+			reason = utils.ExitCodes.NO_ERROR;
+		}
+		
 		// Terminate Adapter
 		if (typeof this.terminate === "function") {
-			this.terminate(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
+			this.terminate(reason);
 		} else {
-			process.exit(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
+			process.exit(reason);
 		}
 	}
 
