@@ -105,7 +105,6 @@ class Fyta extends utils.Adapter {
 			return;
 		}
 	}
-	
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -466,7 +465,6 @@ class Fyta extends utils.Adapter {
 		if(reason == null){
 			reason = utils.ExitCodes.NO_ERROR;
 		}
-		
 		// Terminate Adapter
 		if (typeof this.terminate === "function") {
 			this.terminate(reason);
