@@ -74,7 +74,7 @@ class Fyta extends utils.Adapter {
 		// eMail and password set?
 		if(this.config.email == "" || this.config.password == ""){
 			this.log.error("eMail and/or password not provided. Please check config and restart.");
-			this.exitAdapter(utils.ExitCodes.INVALID_ADAPTER_CONFIG);
+			this.exitAdapter(utils.EXIT_CODES.INVALID_ADAPTER_CONFIG);
 			return;
 		}
 
@@ -463,7 +463,7 @@ class Fyta extends utils.Adapter {
 	 */
 	exitAdapter(reason){
 		if(reason == null){
-			reason = utils.ExitCodes.NO_ERROR;
+			reason = utils.EXIT_CODES.NO_ERROR;
 		}
 		// Terminate Adapter
 		if (typeof this.terminate === "function") {
