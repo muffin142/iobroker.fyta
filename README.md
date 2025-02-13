@@ -22,6 +22,9 @@ Sensors can be purchased an the [FYTA Shop](https://fyta.de/collections/all/prod
 	### **WORK IN PROGRESS**
 -->
 
+### 0.1.3 (2025-02-13)
+-   minor changes due to release process
+
 ### 0.1.2 (2025-01-31)
 -   minor changes to align with requirements of ioBroker-Adapter-Checker
 
