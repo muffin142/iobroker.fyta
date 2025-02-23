@@ -1,0 +1,7 @@
+{
+    "eMail": "Address e-mail",
+    "Password": "Hasło",
+    "Name for virtual garden": "Nazwa wirtualnego ogrodu",
+    "Garden that plants are assigned to when they dont belong to any other garden": "Ogród, do którego przypisane są rośliny, gdy nie należą do żadnego innego ogrodu",
+    "Clear all data on next start": "Wyczyść wszystkie dane na następnym starcie"
+}

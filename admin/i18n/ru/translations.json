@@ -1,0 +1,7 @@
+{
+    "eMail": "Адрес электронной почты",
+    "Password": "Пароль",
+    "Name for virtual garden": "Название виртуального сада",
+    "Garden that plants are assigned to when they dont belong to any other garden": "Сад, на который назначены растения, когда они не принадлежат ни одному другому саду",
+    "Clear all data on next start": "Очистить все данные при следующем старте"
+}
