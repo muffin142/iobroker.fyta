@@ -79,11 +79,7 @@ class Fyta extends utils.Adapter {
 
 					// Failed more then 'loadDataFailedMaxCount' allows?
 					if (loadDataFailedCount >= loadDataFailedMaxCount) {
-						this.log.error(
-							`Loading Data failed ${
-								loadDataFailedMaxCount
-							} times. Stop further loading and terminating adapter...`,
-						);
+						this.log.error(`Loading Data failed ${loadDataFailedMaxCount} times. Stop further loading and terminating adapter...`);
 						if (this.loadDataInterval !== null) {
 							this.clearInterval(this.loadDataInterval);
 						}
@@ -171,8 +167,7 @@ class Fyta extends utils.Adapter {
 			if (response.status === 200) {
 				if (!response.data || !response.data.access_token) {
 					this.log.error("Response does not contain access_token");
-					this.exitAdapter();
-					return;
+					return null;
 				}
 
 				this.setState("info.connection", true, true);
@@ -180,10 +175,11 @@ class Fyta extends utils.Adapter {
 
 				return response.data.access_token;
 			}
-			this.log.error(`Login was not successfull (HTTP-Status ${response.status})`);
+
+			this.log.error(`Login into FYTA API was not successfull (HTTP-Status ${response.status}). Please check config (eMail, Password).`);
 		} catch (error) {
 			// handle error
-			this.log.error("An error occured while logging into FYTA API. Please check config and restart.");
+			this.log.error("An error occured while logging into FYTA API. Please check config (eMail, Password).");
 			this.log.debug(error);
 		}
 
@@ -314,11 +310,11 @@ class Fyta extends utils.Adapter {
 									},
 									native: {},
 								});
-								this.setStateOrCreate(
-									`${virtualGardenNameCleaned}.garden_name`,
-									this.config.virtualGardenName,
-									{ common: { type: "string" } },
-								);
+								this.setStateOrCreate(`${virtualGardenNameCleaned}.garden_name`, this.config.virtualGardenName, {
+									common: {
+										type: "string",
+									},
+								});
 							}
 						});
 					}
@@ -519,8 +515,6 @@ class Fyta extends utils.Adapter {
 
 		const common = {
 			...{
-				//name: "defaultname",
-				//type: "string",
 				role: "value",
 				read: true,
 				write: false,
@@ -566,6 +560,7 @@ class Fyta extends utils.Adapter {
 				responseType: "arraybuffer", // Ensures we handle the data as a stream
 				headers: {
 					Authorization: `Bearer ${token}`,
+					timeout: 10000, // only wait for 10s
 				},
 			})
 				.then((response) => {

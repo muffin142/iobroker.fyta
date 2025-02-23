@@ -1,6 +1,6 @@
 {
-	"eMail":  "eMail-Address",
-	"Password": "Password",
+    "eMail": "E-Mail-Address",
+    "Password": "Password",
 	"Name for virtual garden": "Name for virtual garden",
 	"Garden that plants are assigned to when they dont belong to any other garden": "Garden plants are assigned to when they dont belong to any other garden",
 	"Clear all data on next start": "Clear all data on next start"

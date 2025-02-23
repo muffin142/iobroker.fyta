@@ -1,22 +1,10 @@
 {
-	"i18n": false,
+	"i18n": true,
 	"type": "panel",
 	"items": {
 		"email": {
 			"type": "text",
-			"label": {
-				"en": "eMail-Address",
-				"de": "eMail-Adresse",
-				"ru": "eMail-Address",
-				"pt": "eMail-Endereço",
-				"nl": "e-mailadres",
-				"fr": "adresse électronique",
-				"it": "eMail-Address",
-				"es": "eMail-Address",
-				"pl": "adres eMail-",
-				"uk": "електронна пошта-Address",
-				"zh-cn": "电子邮件地址"
-			},
+			"label": "eMail",
 			"newLine": true,
 			"xs": 12,
 			"sm": 12,
@@ -26,19 +14,7 @@
 		},
 		"password": {
 			"type": "password",
-			"label": {
-				"en": "Password",
-				"de": "Passwort",
-				"ru": "Пароль",
-				"pt": "Senha",
-				"nl": "Wachtwoord",
-				"fr": "Mot de passe",
-				"it": "Password",
-				"es": "Contraseña",
-				"pl": "Hasło",
-				"uk": "Логін",
-				"zh-cn": "密码"
-			},
+			"label": "Password",
 			"newLine": true,
 			"xs": 12,
 			"sm": 12,
@@ -48,33 +24,9 @@
 		},
 		"virtualGardenName": {
 			"type": "text",
-			"label": {
-				"en": "Name for virtual garden",
-				"de": "Name für virtuellen Garten",
-				"ru": "Название для виртуального сада",
-				"pt": "Nome para jardim virtual",
-				"nl": "Naam voor virtuele tuin",
-				"fr": "Nom pour jardin virtuel",
-				"it": "Nome per giardino virtuale",
-				"es": "Nombre del jardín virtual",
-				"pl": "Nazwa wirtualnego ogrodu",
-				"uk": "Назва для віртуального саду",
-				"zh-cn": "虚拟花园的名称"
-			},
+			"label": "Name for virtual garden",
 			"newLine": true,
-			"help": {
-				"en": "Garden that plants are assigned to when they dont belong to any other garden",
-				"de": "Garten, dem Pflanzen zugeordnet werden, wenn sie nicht zu einem anderen Garten gehören",
-				"ru": "Сад, к которому приписаны растения, когда они не принадлежат к другому саду",
-				"pt": "Jardim que as plantas são atribuídas quando não pertencem a qualquer outro jardim",
-				"nl": "Tuinen waar planten aan worden toegewezen als zij niet in een andere tuin thuishoren",
-				"fr": "Jardin auquel les plantes sont attribuées lorsqu'elles n'appartiennent à aucun autre jardin",
-				"it": "Giardino a cui le piante sono assegnate quando non appartengono a qualsiasi altro giardino",
-				"es": "Jardín que las plantas se asignan a cuando no pertenecen a ningún otro jardín",
-				"pl": "Ogród, do którego rośliny są przypisane, kiedy nie należą do żadnego innego ogrodu",
-				"uk": "Сад, які рослини присвячуються, коли вони не належать іншому саду",
-				"zh-cn": "花园,植物在不属于其他花园时被分配使用"
-			},
+			"help": "Garden that plants are assigned to when they dont belong to any other garden",
 			"xs": 12,
 			"sm": 12,
 			"md": 6,
@@ -84,19 +36,7 @@
 		"clearOnStartup": {
 			"newLine": true,
 			"type": "checkbox",
-			"label": {
-				"en": "Clear all data on next start",
-				"de": "Alle Daten beim nächsten Start löschen",
-				"ru": "Очистить все данные на следующем старте",
-				"pt": "Limpar todos os dados no próximo início",
-				"nl": "Alle gegevens wissen bij de volgende start",
-				"fr": "Effacer toutes les données au prochain démarrage",
-				"it": "Cancella tutti i dati sul prossimo inizio",
-				"es": "Limpiar todos los datos en el próximo inicio",
-				"pl": "Wyczyść wszystkie dane przy następnym starcie",
-				"uk": "Очистити всі дані на наступний старт",
-				"zh-cn": "下次启动时清除所有数据"
-			},       
+			"label": "Clear all data on next start",       
 			"xs": 12,
 			"sm": 12,
 			"md": 6,
