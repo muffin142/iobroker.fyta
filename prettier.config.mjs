@@ -7,5 +7,6 @@ export default {
     singleQuote: false,
 	useTabs: true,
 	bracketSpacing: true,
-	arrowParens: "always"
+	arrowParens: "always",	
+    printWidth: 240
 }

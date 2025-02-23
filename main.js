@@ -73,8 +73,8 @@ class Fyta extends utils.Adapter {
 		let loadDataFailedCount = 0;
 		const loadDataFailedMaxCount = 3;
 		const intervalFn = () => {
-			this.loadData().then((result) => {
-				if (!result || result == null) {
+			this.loadData().then((success) => {
+				if (!success || success == null) {
 					loadDataFailedCount++;
 
 					// Failed more then 'loadDataFailedMaxCount' allows?
@@ -147,6 +147,7 @@ class Fyta extends utils.Adapter {
 
 		this.log.debug("Start fytaLogin()");
 
+		let shouldStop = false;
 		try {
 			const response = await axios.post(
 				"https://web.fyta.de/api/auth/login",
@@ -173,21 +174,31 @@ class Fyta extends utils.Adapter {
 				this.setState("info.connection", true, true);
 				this.log.debug("Got access_token, returning");
 
-				return response.data.access_token;
-			} else if (response.status >= 400 && response.status <= 499) {
-				this.log.error(`Login into FYTA API was not successfull (HTTP-Status ${response.status}). Please check config (eMail, Password).`);
+				return {
+					token: response.data.access_token,
+					shouldStop: false
+				};
 			} else {
 				this.log.error("An error occured while logging into FYTA API (HTTP-Status ${response.status}).");
 			}
 		} catch (error) {
-			// handle error
-			this.log.error("An unknown error occured while logging into FYTA API.");
-			this.log.debug(error);
+			// handle error			
+			if (/\b401\b/.test(error)) {
+				this.log.error("Login to FYTA API was rejected due to wrong Password. Please check config.");
+				shouldStop = true;
+			} else if (/\b404\b/.test(error)) {
+				this.log.error("Login to FYTA API was rejected due to wrong eMail. Please check config.");
+			} else {
+				this.log.error("An unknown error occured while logging into FYTA API.");
+				this.log.debug(error);
+			}
 		}
 
 		this.setState("info.connection", false, true);
 
-		return null;
+		return {
+			shouldStop: shouldStop
+		};
 	}
 
 	/**
@@ -236,9 +247,9 @@ class Fyta extends utils.Adapter {
 		}
 		this.loadDataCount++;
 
-		const token = await this.fytaLogin(this.config.email, this.config.password);
-		if (token !== null) {
-			const data = await this.fytaGetData(token);
+		const resultLogin = await this.fytaLogin(this.config.email, this.config.password);
+		if (resultLogin && resultLogin.token) {
+			const data = await this.fytaGetData(resultLogin.token);
 
 			if (data !== null) {
 				this.log.info(`Retrieved ${data.gardens.length} gardens and ${data.plants.length} plants`);
@@ -403,6 +414,11 @@ class Fyta extends utils.Adapter {
 			}
 			return true;
 		}
+		
+		if(resultLogin && resultLogin.shouldStop !== null){
+			return !resultLogin.shouldStop;
+		}
+		
 		return false;
 	}
 
