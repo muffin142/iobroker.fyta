@@ -3,7 +3,7 @@
 import config from '@iobroker/eslint-config';
 
 export default [
-    ...config,
+    //...config,
 
     {
         // specify files to exclude from linting here
