@@ -174,12 +174,14 @@ class Fyta extends utils.Adapter {
 				this.log.debug("Got access_token, returning");
 
 				return response.data.access_token;
+			} else if (response.status >= 400 && response.status <= 499) {
+				this.log.error(`Login into FYTA API was not successfull (HTTP-Status ${response.status}). Please check config (eMail, Password).`);
+			} else {
+				this.log.error("An error occured while logging into FYTA API (HTTP-Status ${response.status}).");
 			}
-
-			this.log.error(`Login into FYTA API was not successfull (HTTP-Status ${response.status}). Please check config (eMail, Password).`);
 		} catch (error) {
 			// handle error
-			this.log.error("An error occured while logging into FYTA API. Please check config (eMail, Password).");
+			this.log.error("An unknown error occured while logging into FYTA API.");
 			this.log.debug(error);
 		}
 
